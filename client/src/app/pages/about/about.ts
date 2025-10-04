@@ -17,7 +17,7 @@ export class About implements OnInit {
   ngOnInit() {
     this.http.get<{ message: string }>('http://localhost:3000/hello').subscribe({
       next: (res) => {
-        this.backendMessage = res.message; // store response
+        this.backendMessage = res.message;
       },
       error: (err) => {
         this.backendMessage = 'Error connecting to backend';
