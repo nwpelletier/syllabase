@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
+import { ThemeService } from '../../services/theme.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-about',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './about.html',
-  styleUrl: './about.css'
+  styleUrls: ['./about.css'],
 })
 export class About {
-
+  constructor(public themeService: ThemeService) {}
 }
