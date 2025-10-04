@@ -1,0 +1,39 @@
+header {
+  background-color: rgb(255, 255, 255);
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+header h1 {
+  color: rgb(37, 31, 56);
+  font-size: 2rem;
+  letter-spacing: 0.2rem;
+  margin-left: 2rem;
+}
+
+header.isDark {
+  background-color: rgb(37, 31, 56);
+}
+
+header.isDark h1 {
+  color: rgb(255, 255, 255);
+}
+
+app-nav {
+  margin-left: 30vw;
+}
+@media screen and (max-width: 1200px) {
+  header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0 20px 0;
+  }
+
+  app-nav {
+    margin-left: 0;
+  }
+}

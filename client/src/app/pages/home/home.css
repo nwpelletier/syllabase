@@ -1,0 +1,9 @@
+.isDark {
+  background-color: #222;
+  color: #fff;
+  padding: 1rem;
+}
+
+div {
+  padding: 1rem;
+}

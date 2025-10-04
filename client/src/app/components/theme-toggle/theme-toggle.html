@@ -1,0 +1,3 @@
+<button [class.isDark]="themeService.isDark()" (click)="toggleTheme()">
+  {{ themeService.isDark() ? '🌞' : '🌙' }}
+</button>
