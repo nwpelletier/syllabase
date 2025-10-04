@@ -19,8 +19,14 @@ export class Home implements OnInit {
 
   ngOnInit() {
     this.http.get<{ message: string }>('http://localhost:3000/ping').subscribe({
-      next: (res) => (this.backendMessage = res.message),
-      error: () => (this.backendMessage = 'Error connecting to backend'),
+      next: (res) => {
+        this.backendMessage = res.message;
+        alert('Welcome! Backend says: ' + this.backendMessage);
+      },
+      error: () => {
+        this.backendMessage = 'Error connecting to backend';
+        alert(this.backendMessage);
+      },
     });
 
     this.http.get<any[]>('http://localhost:3000/pieces').subscribe({
