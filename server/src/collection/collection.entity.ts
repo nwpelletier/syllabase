@@ -3,11 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToMany,
   JoinColumn,
 } from "typeorm";
 import { Composer } from "../composer/composer.entity";
-import { Piece } from "../piece/piece.entity";
 
 @Entity({ name: "collections" })
 export class Collection {
@@ -17,16 +15,7 @@ export class Collection {
   @Column()
   name!: string;
 
-  @ManyToOne(
-    () => Composer,
-    (composer: Composer) => composer.collections
-  )
+  @ManyToOne(() => Composer, { nullable: false })
   @JoinColumn({ name: "composer_id" })
   composer!: Composer;
-
-  @OneToMany(
-    () => Piece,
-    (piece: Piece) => piece.collection
-  )
-  pieces!: Piece[];
 }

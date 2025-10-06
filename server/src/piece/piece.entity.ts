@@ -6,7 +6,6 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Composer } from "../composer/composer.entity";
-import { Collection } from "../collection/collection.entity";
 
 @Entity({ name: "pieces" })
 export class Piece {
@@ -19,8 +18,4 @@ export class Piece {
   @ManyToOne(() => Composer, { nullable: false })
   @JoinColumn({ name: "composer_id" })
   composer!: Composer;
-
-  @ManyToOne(() => Collection, { nullable: true })
-  @JoinColumn({ name: "collection_id" })
-  collection?: Collection;
 }

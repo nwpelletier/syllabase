@@ -1,4 +1,3 @@
-// src/piece/piece.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -7,7 +6,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Piece } from "./piece.entity";
 import { Composer } from "../composer/composer.entity";
-import { Collection } from "../collection/collection.entity";
 import { CreatePieceDto } from "./dto/create-piece.dto";
 
 @Injectable()
@@ -16,14 +14,12 @@ export class PieceService {
     @InjectRepository(Piece)
     private readonly pieceRepo: Repository<Piece>,
     @InjectRepository(Composer)
-    private readonly composerRepo: Repository<Composer>,
-    @InjectRepository(Collection)
-    private readonly collectionRepo: Repository<Collection>
+    private readonly composerRepo: Repository<Composer>
   ) {}
 
   findAll(): Promise<Piece[]> {
     return this.pieceRepo.find({
-      relations: ["composer", "collection"],
+      relations: ["composer"],
     });
   }
 
@@ -47,16 +43,9 @@ export class PieceService {
         })
       : undefined;
 
-    const collection = dto.collectionId
-      ? await this.collectionRepo.findOneBy({
-          id: dto.collectionId,
-        })
-      : undefined;
-
     const piece = this.pieceRepo.create({
       name: dto.name,
       composer: composer ?? undefined,
-      collection: collection ?? undefined,
     });
 
     return this.pieceRepo.save(piece);

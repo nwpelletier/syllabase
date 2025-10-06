@@ -5,7 +5,7 @@ import {
   IsString,
 } from "class-validator";
 
-export class CreatePieceDto {
+export class CreateCollectionDto {
   @IsString()
   @IsNotEmpty()
   name!: string;
