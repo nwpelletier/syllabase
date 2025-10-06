@@ -19,6 +19,11 @@ export class PieceSyllabusController {
     return this.service.findAll();
   }
 
+  @Get("details")
+  getDetails() {
+    return this.service.getAllDetails();
+  }
+
   @Post()
   create(
     @Body() dto: CreatePieceSyllabusDto

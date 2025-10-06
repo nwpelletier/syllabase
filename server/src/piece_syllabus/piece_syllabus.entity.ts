@@ -18,7 +18,7 @@ export class PieceSyllabus {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "piece_id" })
-  piece!: Piece;
+  piece?: Piece;
 
   @ManyToOne(
     () => Collection,

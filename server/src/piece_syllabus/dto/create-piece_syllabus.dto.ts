@@ -5,9 +5,9 @@ import {
 } from "class-validator";
 
 export class CreatePieceSyllabusDto {
+  @IsOptional()
   @IsInt()
-  @IsNotEmpty()
-  pieceId!: number;
+  pieceId?: number;
 
   @IsOptional()
   @IsInt()

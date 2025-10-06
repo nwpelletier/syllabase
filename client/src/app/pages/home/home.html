@@ -23,14 +23,27 @@
     <button type="submit" [disabled]="!isFormValid">Add Piece</button>
   </form>
 
-  <h2>Existing Pieces:</h2>
-  <ul>
-    <li *ngFor="let piece of pieces">
-      {{ piece.name }}
-      <span *ngIf="piece.collection"> (Collection: {{ piece.collection.name }}) </span>
-      — Composer: {{ piece.composer.first_name }} {{ piece.composer.last_name }}
-    </li>
-  </ul>
+  <h2>Piece Syllabi Details</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Piece</th>
+        <th>Composer</th>
+        <th>Collection</th>
+        <th>Syllabus</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of piecesWithDetails">
+        <td>{{ item.pieceName }}</td>
+        <td>{{ item.composer }}</td>
+        <td>{{ item.collection || '-' }}</td>
+        <td>{{ item.syllabus || '-' }}</td>
+        <td>{{ item.grade || '-' }}</td>
+      </tr>
+    </tbody>
+  </table>
 
   <!-- NEW: Add Composer Form -->
   <h2>Add a new composer</h2>
@@ -79,4 +92,71 @@
       {{ composer.death_year || '?' }}) {{ composer.nationality }}
     </li>
   </ul>
+
+  <h2>Add a new Collection</h2>
+  <form (ngSubmit)="addCollection()">
+    <input
+      type="text"
+      placeholder="Collection Name"
+      [(ngModel)]="newCollection.name"
+      name="collectionName"
+      required
+    />
+    <select [(ngModel)]="newCollection.composerId" name="collectionComposer" required>
+      <option [ngValue]="null">-- Select Composer --</option>
+      <option *ngFor="let composer of composers" [ngValue]="composer.id">
+        {{ composer.first_name }} {{ composer.last_name }}
+      </option>
+    </select>
+    <button type="submit">Add Collection</button>
+  </form>
+
+  <h2>Current Collections</h2>
+  <ul>
+    <li *ngFor="let collection of collections">
+      {{ collection.name }} — Composer: {{ collection.composer.first_name }}
+      {{ collection.composer.last_name }}
+    </li>
+  </ul>
+
+  <h2>Add Piece to Syllabus</h2>
+  <form (ngSubmit)="addPieceSyllabus()">
+    <label>
+      Piece:
+      <select [(ngModel)]="newPieceSyllabus.pieceId" name="piece">
+        <option [ngValue]="null">-- Select Piece --</option>
+        <option *ngFor="let piece of pieces" [ngValue]="piece.id">{{ piece.name }}</option>
+      </select>
+    </label>
+
+    <label>
+      Collection (optional):
+      <select [(ngModel)]="newPieceSyllabus.collectionId" name="collection">
+        <option [ngValue]="null">-- None --</option>
+        <option *ngFor="let collection of collections" [ngValue]="collection.id">
+          {{ collection.name }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      Syllabus:
+      <select [(ngModel)]="newPieceSyllabus.syllabusId" name="syllabus">
+        <option [ngValue]="null">-- Select Syllabus --</option>
+        <option *ngFor="let syllabus of syllabi" [ngValue]="syllabus.id">
+          {{ syllabus.name }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      Grade:
+      <select [(ngModel)]="newPieceSyllabus.gradeId" name="grade">
+        <option [ngValue]="null">-- Select Grade --</option>
+        <option *ngFor="let grade of grades" [ngValue]="grade.id">{{ grade.grade }}</option>
+      </select>
+    </label>
+
+    <button type="submit" [disabled]="!isPieceSyllabusFormValid()">Add</button>
+  </form>
 </div>
