@@ -11,15 +11,27 @@ import { CreateEraDto } from "./dto/create-era.dto";
 export class EraService {
   constructor(
     @InjectRepository(Era)
-    private readonly eraRepo: Repository<Era>
+    private readonly eraRepository: Repository<Era>
   ) {}
 
   findAll(): Promise<Era[]> {
-    return this.eraRepo.find();
+    return this.eraRepository.find();
+  }
+
+  async findOne(id: number): Promise<Era> {
+    const era = await this.eraRepository.findOne({
+      where: { id },
+    });
+    if (!era) {
+      throw new NotFoundException(
+        `Era with ID ${id} not found`
+      );
+    }
+    return era;
   }
 
   async create(dto: CreateEraDto): Promise<Era> {
-    const era = this.eraRepo.create(dto);
-    return this.eraRepo.save(era);
+    const era = this.eraRepository.create(dto);
+    return this.eraRepository.save(era);
   }
 }

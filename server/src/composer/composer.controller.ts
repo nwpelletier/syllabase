@@ -26,4 +26,9 @@ export class ComposerController {
   findAll(): Promise<Composer[]> {
     return this.composerService.findAll();
   }
+
+  @Get(":id")
+  findOne(@Param("id") id: number): Promise<Composer> {
+    return this.composerService.findOne(id);
+  }
 }

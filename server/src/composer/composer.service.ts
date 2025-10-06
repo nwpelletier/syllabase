@@ -24,6 +24,19 @@ export class ComposerService {
     return this.composerRepository.find();
   }
 
+  async findOne(id: number): Promise<Composer> {
+    const composer = await this.composerRepository.findOne({
+      where: { id },
+      relations: ["pieces", "collections"],
+    });
+    if (!composer) {
+      throw new NotFoundException(
+        `Composer with ID ${id} not found`
+      );
+    }
+    return composer;
+  }
+
   async create(dto: CreateComposerDto): Promise<Composer> {
     const composer = this.composerRepository.create({
       first_name: dto.firstName,

@@ -22,4 +22,9 @@ export class EraController {
   findAll(): Promise<Era[]> {
     return this.eraService.findAll();
   }
+
+  @Get(":id")
+  findOne(@Param("id") id: number): Promise<Era> {
+    return this.eraService.findOne(id);
+  }
 }
