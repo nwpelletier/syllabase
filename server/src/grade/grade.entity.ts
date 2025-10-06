@@ -3,9 +3,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from "typeorm";
 import { Syllabus } from "../syllabus/syllabus.entity";
+import { PieceSyllabus } from "../piece_syllabus/piece_syllabus.entity";
 
 @Entity({ name: "grades" })
 export class Grade {
@@ -21,4 +23,7 @@ export class Grade {
 
   @Column()
   grade_level!: number;
+
+  @OneToMany(() => PieceSyllabus, (ps) => ps.piece)
+  pieceSyllabi!: PieceSyllabus[];
 }

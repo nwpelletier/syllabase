@@ -3,8 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from "typeorm";
+import { PieceSyllabus } from "../piece_syllabus/piece_syllabus.entity";
 
 @Entity({ name: "syllabi" })
 export class Syllabus {
@@ -16,4 +18,7 @@ export class Syllabus {
 
   @Column()
   country!: string;
+
+  @OneToMany(() => PieceSyllabus, (ps) => ps.piece)
+  pieceSyllabi!: PieceSyllabus[];
 }

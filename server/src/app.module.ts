@@ -7,12 +7,14 @@ import { CollectionModule } from "./collection/collection.module";
 import { EraModule } from "./era/era.module";
 import { GradeModule } from "./grade/grade.module";
 import { SyllabusModule } from "./syllabus/syllabus.module";
+import { PieceSyllabusModule } from "./piece_syllabus/piece_syllabus.module";
 import { Piece } from "./piece/piece.entity";
 import { Composer } from "./composer/composer.entity";
 import { Collection } from "./collection/collection.entity";
 import { Era } from "./era/era.entity";
 import { Grade } from "./grade/grade.entity";
 import { Syllabus } from "./syllabus/syllabus.entity";
+import { PieceSyllabus } from "./piece_syllabus/piece_syllabus.entity";
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { Syllabus } from "./syllabus/syllabus.entity";
         Era,
         Grade,
         Syllabus,
+        PieceSyllabus,
       ],
     }),
     PieceModule,
@@ -40,6 +43,7 @@ import { Syllabus } from "./syllabus/syllabus.entity";
     CollectionModule,
     GradeModule,
     SyllabusModule,
+    PieceSyllabusModule,
   ],
   controllers: [AppController],
   providers: [],
