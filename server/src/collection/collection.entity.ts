@@ -6,8 +6,8 @@ import {
   OneToMany,
   JoinColumn,
 } from "typeorm";
-import { Composer } from "./composer.entity";
-import { Piece } from "./piece.entity";
+import { Composer } from "../composer/composer.entity";
+import { Piece } from "../piece/piece.entity";
 
 @Entity({ name: "collections" })
 export class Collection {

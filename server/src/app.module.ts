@@ -1,9 +1,11 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from "./app.controller";
-import { Piece } from "./entities/piece.entity"; // we'll create this
-import { Collection } from "./entities/collection.entity"; // also create this
-import { Composer } from "./entities/composer.entity"; // also create this
+import { PieceModule } from "./piece/piece.module";
+import { ComposerModule } from "./composer/composer.module";
+import { Piece } from "./piece/piece.entity";
+import { Composer } from "./composer/composer.entity";
+import { Collection } from "./collection/collection.entity";
 
 @Module({
   imports: [
@@ -15,10 +17,11 @@ import { Composer } from "./entities/composer.entity"; // also create this
       password: "Montreal89!",
       database: "Syllabase",
       schema: "syllabus_data",
-      entities: [Piece, Collection, Composer],
-      synchronize: false, // set true only in dev; creates tables automatically
+      synchronize: false,
+      entities: [Piece, Composer, Collection],
     }),
-    TypeOrmModule.forFeature([Piece, Collection, Composer]),
+    PieceModule,
+    ComposerModule,
   ],
   controllers: [AppController],
   providers: [],

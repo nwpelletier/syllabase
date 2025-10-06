@@ -5,8 +5,8 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from "typeorm";
-import { Piece } from "./piece.entity";
-import { Collection } from "./collection.entity";
+import { Piece } from "../piece/piece.entity";
+import { Collection } from "../collection/collection.entity";
 
 @Entity({ name: "composers" })
 export class Composer {

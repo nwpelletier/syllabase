@@ -2,11 +2,31 @@
   <h1>Home</h1>
   <p>{{ backendMessage }}</p>
 
-  <h2>Pieces from backend:</h2>
+  <h2>Add a new piece</h2>
+  <form (ngSubmit)="addPiece()">
+    <label>
+      Piece Name:
+      <input type="text" [(ngModel)]="pieceName" name="pieceName" />
+    </label>
+
+    <label>
+      Composer:
+      <select [(ngModel)]="selectedComposerId" name="composer">
+        <option [ngValue]="null">-- Select Composer --</option>
+        <option *ngFor="let composer of composers" [ngValue]="composer.id">
+          {{ composer.first_name }} {{ composer.last_name }}
+        </option>
+      </select>
+    </label>
+
+    <button type="submit" [disabled]="!isFormValid">Add Piece</button>
+  </form>
+
+  <h2>Existing Pieces:</h2>
   <ul>
     <li *ngFor="let piece of pieces">
       {{ piece.name }}
-      <span *ngIf="piece.collection"> (Collection: {{ piece.collection.name }})</span>
+      <span *ngIf="piece.collection"> (Collection: {{ piece.collection.name }}) </span>
       — Composer: {{ piece.composer.first_name }} {{ piece.composer.last_name }}
     </li>
   </ul>
