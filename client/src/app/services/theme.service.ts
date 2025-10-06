@@ -4,7 +4,7 @@ import { Injectable, signal, WritableSignal } from '@angular/core';
   providedIn: 'root',
 })
 export class ThemeService {
-  isDark: WritableSignal<boolean> = signal(false);
+  isDark: WritableSignal<boolean> = signal(true);
   toggle(): void {
     this.isDark.set(!this.isDark());
   }

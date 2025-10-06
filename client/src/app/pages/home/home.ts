@@ -16,9 +16,18 @@ export class Home implements OnInit {
   pieces: any[] = [];
   composers: any[] = [];
 
-  // Form fields
+  // Piece form fields
   pieceName = '';
   selectedComposerId: number | null = null;
+
+  // Composer form fields
+  newComposer = {
+    firstName: '',
+    lastName: '',
+    birthYear: null as number | null,
+    deathYear: null as number | null,
+    nationality: '',
+  };
 
   constructor(public themeService: ThemeService, private http: HttpClient) {}
 
@@ -41,6 +50,7 @@ export class Home implements OnInit {
     });
   }
 
+  // --- Piece Methods (existing) ---
   addPiece() {
     if (!this.pieceName || !this.selectedComposerId) return;
 
@@ -55,8 +65,6 @@ export class Home implements OnInit {
         this.pieceName = '';
         this.selectedComposerId = null;
         this.fetchPieces();
-
-        // Clear message after 3 seconds
         setTimeout(() => (this.backendMessage = ''), 3000);
       },
       error: (err) => {
@@ -67,8 +75,30 @@ export class Home implements OnInit {
     });
   }
 
-  // Helper getter for form validation
   get isFormValid(): boolean {
     return !!this.pieceName && !!this.selectedComposerId;
+  }
+
+  // --- NEW: Composer Methods ---
+  addComposer() {
+    this.http.post('http://localhost:3000/composers', this.newComposer).subscribe({
+      next: () => {
+        this.backendMessage = 'Composer added!';
+        this.newComposer = {
+          firstName: '',
+          lastName: '',
+          birthYear: null,
+          deathYear: null,
+          nationality: '',
+        };
+        this.fetchComposers();
+        setTimeout(() => (this.backendMessage = ''), 3000);
+      },
+      error: (err) => {
+        console.error(err);
+        this.backendMessage = 'Error adding composer.';
+        setTimeout(() => (this.backendMessage = ''), 3000);
+      },
+    });
   }
 }

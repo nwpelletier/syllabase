@@ -7,7 +7,7 @@ import { Repository } from "typeorm";
 import { Composer } from "./composer.entity";
 import { Piece } from "../piece/piece.entity";
 import { Collection } from "../collection/collection.entity";
-// import { CreateComposerDto } from "./dto/create-composer.dto";
+import { CreateComposerDto } from "./dto/create-composer.dto";
 
 @Injectable()
 export class ComposerService {
@@ -19,7 +19,19 @@ export class ComposerService {
     @InjectRepository(Collection)
     private collectionRepository: Repository<Collection>
   ) {}
+
   findAll(): Promise<Composer[]> {
     return this.composerRepository.find();
+  }
+
+  async create(dto: CreateComposerDto): Promise<Composer> {
+    const composer = this.composerRepository.create({
+      first_name: dto.firstName,
+      last_name: dto.lastName,
+      birth_year: dto.birthYear,
+      death_year: dto.deathYear,
+      nationality: dto.nationality,
+    });
+    return this.composerRepository.save(composer);
   }
 }
