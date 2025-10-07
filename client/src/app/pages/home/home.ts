@@ -1,218 +1,176 @@
 import { Component, OnInit } from '@angular/core';
-import { ThemeService } from '../../services/theme.service';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+import { ThemeService } from '../../services/theme.service';
+import { ComposersService } from '../../services/composers.service';
+import { PiecesService } from '../../services/pieces.service';
+import { CollectionsService } from '../../services/collections.service';
+import { SyllabiService } from '../../services/syllabi.service';
+import { GradesService } from '../../services/grades.service';
+import { PieceSyllabiService } from '../../services/piece-syllabi.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
 })
 export class Home implements OnInit {
   backendMessage = '';
-  pieces: any[] = [];
+
   composers: any[] = [];
+  pieces: any[] = [];
+  collections: any[] = [];
+  syllabi: any[] = [];
+  grades: any[] = [];
+  piecesWithDetails: any[] = [];
 
   pieceName = '';
   selectedComposerId: number | null = null;
 
-  newComposer = {
-    firstName: '',
-    lastName: '',
-    birthYear: null as number | null,
-    deathYear: null as number | null,
-    nationality: '',
-  };
+  newComposer = { firstName: '', lastName: '', birthYear: null, deathYear: null, nationality: '' };
+  newCollection = { name: '', composerId: null };
+  selectedComposerIdForPieceSyllabus: number | null = null;
+  filteredPieces: any[] = [];
+  filteredCollections: any[] = [];
+  filteredGrades: any[] = [];
 
-  collections: any[] = [];
-  newCollection = { name: '', composerId: null as number | null };
+  newPieceSyllabus = { pieceId: null, collectionId: null, syllabusId: null, gradeId: null };
 
-  syllabi: any[] = [];
-  grades: any[] = [];
-  newPieceSyllabus = {
-    pieceId: null as number | null,
-    collectionId: null as number | null,
-    syllabusId: null as number | null,
-    gradeId: null as number | null,
-  };
-
-  piecesWithDetails: {
-    pieceName: string;
-    composer: string;
-    collection?: string;
-    syllabus?: string;
-    grade?: string;
-  }[] = [];
-
-  constructor(public themeService: ThemeService, private http: HttpClient) {}
+  constructor(
+    public themeService: ThemeService,
+    private composersService: ComposersService,
+    private piecesService: PiecesService,
+    private collectionsService: CollectionsService,
+    private syllabiService: SyllabiService,
+    private gradesService: GradesService,
+    private pieceSyllabiService: PieceSyllabiService
+  ) {}
 
   ngOnInit() {
-    this.fetchPieceSyllabiDetails();
-    this.fetchPieces();
-    this.fetchComposers();
-    this.fetchCollections();
-    this.fetchSyllabi();
-    this.fetchGrades();
+    this.loadAllData();
   }
 
-  fetchPieces() {
-    this.http.get<any[]>('http://localhost:3000/pieces').subscribe({
-      next: (res) => (this.pieces = res),
-      error: () => console.error('Failed to fetch pieces'),
-    });
+  get isFormValid(): boolean {
+    return !!this.pieceName && this.selectedComposerId != null;
   }
 
-  fetchComposers() {
-    this.http.get<any[]>('http://localhost:3000/composers').subscribe({
-      next: (res) => (this.composers = res),
-      error: () => console.error('Failed to fetch composers'),
+  loadAllData() {
+    this.composersService.getAll().subscribe((res) => (this.composers = res));
+    this.piecesService.getAll().subscribe((res) => {
+      this.pieces = res;
+      this.filterByComposer();
     });
+    this.collectionsService.getAll().subscribe((res) => {
+      this.collections = res;
+      this.filterByComposer();
+    });
+    this.syllabiService.getAll().subscribe((res) => (this.syllabi = res));
+    this.gradesService.getAll().subscribe((res) => (this.grades = res));
+    this.pieceSyllabiService.getDetails().subscribe((res) => (this.piecesWithDetails = res));
   }
 
   addPiece() {
     if (!this.pieceName || !this.selectedComposerId) return;
-
-    const payload = {
-      name: this.pieceName,
-      composerId: this.selectedComposerId,
-    };
-
-    this.http.post('http://localhost:3000/pieces', payload).subscribe({
-      next: () => {
-        this.backendMessage = 'Piece added!';
+    this.piecesService
+      .add({ name: this.pieceName, composerId: this.selectedComposerId })
+      .subscribe(() => {
         this.pieceName = '';
         this.selectedComposerId = null;
-        this.fetchPieces();
-        setTimeout(() => (this.backendMessage = ''), 3000);
-      },
-      error: (err) => {
-        console.error(err);
-        this.backendMessage = 'Error adding piece.';
-        setTimeout(() => (this.backendMessage = ''), 3000);
-      },
-    });
-  }
-
-  get isFormValid(): boolean {
-    return !!this.pieceName && !!this.selectedComposerId;
+        this.piecesService.getAll().subscribe((res) => (this.pieces = res));
+      });
   }
 
   addComposer() {
-    this.http.post('http://localhost:3000/composers', this.newComposer).subscribe({
-      next: () => {
-        this.backendMessage = 'Composer added!';
-        this.newComposer = {
-          firstName: '',
-          lastName: '',
-          birthYear: null,
-          deathYear: null,
-          nationality: '',
-        };
-        this.fetchComposers();
-        setTimeout(() => (this.backendMessage = ''), 3000);
-      },
-      error: (err) => {
-        console.error(err);
-        this.backendMessage = 'Error adding composer.';
-        setTimeout(() => (this.backendMessage = ''), 3000);
-      },
-    });
-  }
-
-  fetchCollections() {
-    this.http
-      .get<any[]>('http://localhost:3000/collections')
-      .subscribe((res) => (this.collections = res));
-  }
-  fetchSyllabi() {
-    this.http.get<any[]>('http://localhost:3000/syllabi').subscribe((res) => (this.syllabi = res));
-  }
-  fetchGrades() {
-    this.http.get<any[]>('http://localhost:3000/grades').subscribe((res) => (this.grades = res));
-  }
-
-  fetchPieceSyllabiDetails() {
-    this.http.get<any[]>('http://localhost:3000/piece-syllabi/details').subscribe({
-      next: (res) => {
-        // Sort by composer first, then piece
-        this.piecesWithDetails = res.sort((a, b) => {
-          const composerA = (a.composer || '').toLowerCase();
-          const composerB = (b.composer || '').toLowerCase();
-
-          if (composerA < composerB) return -1;
-          if (composerA > composerB) return 1;
-
-          const pieceA = (a.pieceName || '').toLowerCase();
-          const pieceB = (b.pieceName || '').toLowerCase();
-
-          if (pieceA < pieceB) return -1;
-          if (pieceA > pieceB) return 1;
-
-          return 0; // equal
-        });
-      },
-      error: (err) => console.error('Failed to fetch piece syllabi details', err),
+    this.composersService.add(this.newComposer).subscribe(() => {
+      this.newComposer = {
+        firstName: '',
+        lastName: '',
+        birthYear: null,
+        deathYear: null,
+        nationality: '',
+      };
+      this.composersService.getAll().subscribe((res) => (this.composers = res));
     });
   }
 
   addCollection() {
     if (!this.newCollection.name || !this.newCollection.composerId) return;
-    this.http.post('http://localhost:3000/collections', this.newCollection).subscribe({
-      next: () => {
-        this.newCollection = { name: '', composerId: null };
-        this.fetchCollections();
-      },
-      error: (err) => console.error(err),
+    this.collectionsService.add(this.newCollection).subscribe(() => {
+      this.newCollection = { name: '', composerId: null };
+      this.collectionsService.getAll().subscribe((res) => (this.collections = res));
     });
   }
 
   addPieceSyllabus() {
     const { pieceId, collectionId, syllabusId, gradeId } = this.newPieceSyllabus;
+    if (!(pieceId || collectionId) || !(syllabusId && gradeId)) return;
 
-    // Validation
-    const hasPieceOrCollection = !!pieceId || !!collectionId;
-    const hasSyllabusAndGrade = !!syllabusId && !!gradeId;
-
-    if (!hasPieceOrCollection) {
-      console.warn('Must provide either a piece or a collection.');
-      return;
-    }
-
-    if (!hasSyllabusAndGrade) {
-      console.warn('Both syllabus and grade must be provided.');
-      return;
-    }
-
-    // Prepare payload — only include fields with values
     const payload: any = {};
     if (pieceId) payload.pieceId = pieceId;
     if (collectionId) payload.collectionId = collectionId;
-    payload.syllabusId = syllabusId; // required
-    payload.gradeId = gradeId; // required
+    payload.syllabusId = syllabusId;
+    payload.gradeId = gradeId;
 
-    this.http.post('http://localhost:3000/piece-syllabi', payload).subscribe({
-      next: () => {
-        // Reset form
-        this.newPieceSyllabus = {
-          pieceId: null,
-          collectionId: null,
-          syllabusId: null,
-          gradeId: null,
-        };
-        // Refresh table
-        this.fetchPieceSyllabiDetails();
-      },
-      error: (err) => console.error(err),
+    this.pieceSyllabiService.add(payload).subscribe(() => {
+      this.newPieceSyllabus = {
+        pieceId: null,
+        collectionId: null,
+        syllabusId: null,
+        gradeId: null,
+      };
+      this.pieceSyllabiService.getDetails().subscribe((res) => (this.piecesWithDetails = res));
     });
   }
 
-  isPieceSyllabusFormValid() {
-    const { pieceId, collectionId, syllabusId, gradeId } = this.newPieceSyllabus;
-    const hasPieceOrCollection = !!pieceId || !!collectionId;
-    const hasSyllabusAndGrade = !!syllabusId && !!gradeId;
-    return hasPieceOrCollection && hasSyllabusAndGrade;
+  onComposerChange() {
+    this.filterByComposer();
+  }
+
+  filterByComposer() {
+    if (!this.selectedComposerIdForPieceSyllabus) {
+      this.filteredPieces = [];
+      this.filteredCollections = [];
+      return;
+    }
+
+    this.filteredPieces = this.pieces.filter(
+      (p) => p.composer?.id === this.selectedComposerIdForPieceSyllabus
+    );
+    this.filteredCollections = this.collections.filter(
+      (c) => c.composer?.id === this.selectedComposerIdForPieceSyllabus
+    );
+
+    this.newPieceSyllabus.pieceId = null;
+    this.newPieceSyllabus.collectionId = null;
+  }
+
+  // ----- GRADES/SYLLABI: TEMPORARY STUB -----
+  onSyllabusChange() {
+    this.filterBySyllabus();
+  }
+
+  filterBySyllabus() {
+    if (!this.newPieceSyllabus.syllabusId) {
+      this.filteredGrades = [];
+      return;
+    }
+
+    this.filteredGrades = this.grades.filter(
+      (g) => g.syllabus?.id === this.newPieceSyllabus.syllabusId
+    );
+
+    this.newPieceSyllabus.gradeId = null;
+  }
+
+  isPieceSyllabusFormValid(): boolean {
+    return (
+      (this.newPieceSyllabus.pieceId != null || this.newPieceSyllabus.collectionId != null) &&
+      this.newPieceSyllabus.syllabusId != null &&
+      this.newPieceSyllabus.gradeId != null
+    );
   }
 }
