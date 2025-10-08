@@ -45,7 +45,8 @@ export class Home implements OnInit {
 
   // ------------------- NEW ENTRY PLACEHOLDERS -------------------
   pieceName = '';
-  newCollection: { name: string; composerId: number | null } = { name: '', composerId: null };
+  newCollection: Collection = { id: 0, name: '', composer: null }; // ✅
+
   newComposer: Composer = {
     id: 0,
     firstName: '',
@@ -121,12 +122,16 @@ export class Home implements OnInit {
   }
 
   addCollection() {
-    if (!this.newCollection.name || this.newCollection.composerId == null) return;
-    this.collectionsService
-      .addCollection(this.newCollection.name, this.newCollection.composerId)
-      .subscribe(() => {
-        this.refreshCollections();
-      });
+    const composerId = this.newCollection.composer?.id;
+    if (!this.newCollection.name || composerId == null) {
+      console.log('Validation failed');
+      return;
+    }
+
+    this.collectionsService.addCollection(this.newCollection.name, composerId).subscribe(() => {
+      this.refreshCollections();
+      this.newCollection = { id: 0, name: '', composer: null };
+    });
   }
 
   addPieceSyllabus() {
