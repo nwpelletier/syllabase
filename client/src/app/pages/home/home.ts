@@ -86,14 +86,7 @@ export class Home implements OnInit {
       grades: this.gradesService.getAll(),
       piecesWithDetails: this.pieceSyllabiService.getDetails(),
     }).subscribe(({ composers, pieces, collections, syllabi, grades, piecesWithDetails }) => {
-      this.composers = composers.map((c: any) => ({
-        id: c.id,
-        firstName: c.first_name,
-        lastName: c.last_name,
-        birthYear: c.birth_year,
-        deathYear: c.death_year,
-        nationality: c.nationality,
-      }));
+      this.composers = composers;
       this.pieces = pieces;
       this.collections = collections;
       this.syllabi = syllabi;
