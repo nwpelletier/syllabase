@@ -103,6 +103,9 @@ export class Home implements OnInit {
       console.log('Loaded piecesWithDetails:', this.piecesWithDetails);
 
       this.filterByComposer();
+      this.gradesService.getAll().subscribe((grades) => {
+        console.log('Grades from API:', grades);
+      });
     });
   }
 
