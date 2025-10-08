@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Nav } from './nav/nav';
-import { ThemeService } from '../../services/theme.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { ThemeToggle } from '../theme-toggle/theme-toggle';
 
 @Component({

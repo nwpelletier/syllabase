@@ -34,7 +34,7 @@
       <select [(ngModel)]="selectedComposerId" name="composerSelectAdd">
         <option [ngValue]="null">-- Select Composer --</option>
         <option *ngFor="let composer of composers" [ngValue]="composer.id">
-          {{ composer.first_name }} {{ composer.last_name }}
+          {{ composer.firstName }} {{ composer.lastName }}
         </option>
       </select>
     </label>
@@ -95,7 +95,7 @@
     <select [(ngModel)]="newCollection.composerId" name="collectionComposer" required>
       <option [ngValue]="null">-- Select Composer --</option>
       <option *ngFor="let composer of composers" [ngValue]="composer.id">
-        {{ composer.first_name }} {{ composer.last_name }}
+        {{ composer.firstName }} {{ composer.lastName }}
       </option>
     </select>
     <button type="submit">Add Collection</button>
@@ -113,7 +113,7 @@
       >
         <option [ngValue]="null">-- Select Composer --</option>
         <option *ngFor="let composer of composers" [ngValue]="composer.id">
-          {{ composer.first_name }} {{ composer.last_name }}
+          {{ composer.firstName }} {{ composer.lastName }}
         </option>
       </select>
     </label>

@@ -1,44 +1,66 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 
-import { ThemeService } from '../../services/theme.service';
-import { ComposersService } from '../../services/composers.service';
-import { PiecesService } from '../../services/pieces.service';
-import { CollectionsService } from '../../services/collections.service';
-import { SyllabiService } from '../../services/syllabi.service';
-import { GradesService } from '../../services/grades.service';
-import { PieceSyllabiService } from '../../services/piece-syllabi.service';
+import { ThemeService } from '../../core/services/theme.service';
+import { ComposersService } from '../../core/services/api/composers.service';
+import { PiecesService } from '../../core/services/api/pieces.service';
+import { CollectionsService } from '../../core/services/api/collections.service';
+import { SyllabiService } from '../../core/services/api/syllabi.service';
+import { GradesService } from '../../core/services/api/grades.service';
+import { PieceSyllabiService } from '../../core/services/api/piece-syllabi.service';
+
+import { Composer } from '../../models/composer.model';
+import { Piece } from '../../models/piece.model';
+import { Collection } from '../../models/collection.model';
+import { Syllabus } from '../../models/syllabus.model';
+import { Grade } from '../../models/grade.model';
+import { PieceWithDetails } from '../../models/piece-with-details.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
 })
 export class Home implements OnInit {
+  // ------------------- DATA -------------------
   backendMessage = '';
+  composers: Composer[] = [];
+  pieces: Piece[] = [];
+  collections: Collection[] = [];
+  syllabi: Syllabus[] = [];
+  grades: Grade[] = [];
+  piecesWithDetails: PieceWithDetails[] = [];
 
-  composers: any[] = [];
-  pieces: any[] = [];
-  collections: any[] = [];
-  syllabi: any[] = [];
-  grades: any[] = [];
-  piecesWithDetails: any[] = [];
-
-  pieceName = '';
+  // ------------------- SELECTION -------------------
   selectedComposerId: number | null = null;
-
-  newComposer = { firstName: '', lastName: '', birthYear: null, deathYear: null, nationality: '' };
-  newCollection = { name: '', composerId: null };
   selectedComposerIdForPieceSyllabus: number | null = null;
-  filteredPieces: any[] = [];
-  filteredCollections: any[] = [];
-  filteredGrades: any[] = [];
 
-  newPieceSyllabus = { pieceId: null, collectionId: null, syllabusId: null, gradeId: null };
+  filteredPieces: Piece[] = [];
+  filteredCollections: Collection[] = [];
+  filteredGrades: Grade[] = [];
+
+  // ------------------- NEW ENTRY PLACEHOLDERS -------------------
+  pieceName = '';
+  newCollection: { name: string; composerId: number | null } = { name: '', composerId: null };
+  newComposer: Composer = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    birthYear: null,
+    deathYear: null,
+    nationality: '',
+  };
+
+  newPieceSyllabus: {
+    pieceId: number | null;
+    collectionId: number | null;
+    syllabusId: number | null;
+    gradeId: number | null;
+  } = { pieceId: null, collectionId: null, syllabusId: null, gradeId: null };
 
   constructor(
     public themeService: ThemeService,
@@ -54,78 +76,80 @@ export class Home implements OnInit {
     this.loadAllData();
   }
 
-  get isFormValid(): boolean {
-    return !!this.pieceName && this.selectedComposerId != null;
-  }
-
+  // ------------------- LOAD -------------------
   loadAllData() {
-    this.composersService.getAll().subscribe((res) => (this.composers = res));
-    this.piecesService.getAll().subscribe((res) => {
-      this.pieces = res;
+    forkJoin({
+      composers: this.composersService.getAll(),
+      pieces: this.piecesService.getAll(),
+      collections: this.collectionsService.getAll(),
+      syllabi: this.syllabiService.getAll(),
+      grades: this.gradesService.getAll(),
+      piecesWithDetails: this.pieceSyllabiService.getDetails(),
+    }).subscribe(({ composers, pieces, collections, syllabi, grades, piecesWithDetails }) => {
+      this.composers = composers.map((c: any) => ({
+        id: c.id,
+        firstName: c.first_name,
+        lastName: c.last_name,
+        birthYear: c.birth_year,
+        deathYear: c.death_year,
+        nationality: c.nationality,
+      }));
+      this.pieces = pieces;
+      this.collections = collections;
+      this.syllabi = syllabi;
+      this.grades = grades;
+      this.piecesWithDetails = piecesWithDetails;
+
+      console.log('Loaded piecesWithDetails:', this.piecesWithDetails);
+
       this.filterByComposer();
     });
-    this.collectionsService.getAll().subscribe((res) => {
-      this.collections = res;
-      this.filterByComposer();
-    });
-    this.syllabiService.getAll().subscribe((res) => (this.syllabi = res));
-    this.gradesService.getAll().subscribe((res) => (this.grades = res));
-    this.pieceSyllabiService.getDetails().subscribe((res) => (this.piecesWithDetails = res));
   }
 
+  // ------------------- CRUD -------------------
   addPiece() {
     if (!this.pieceName || !this.selectedComposerId) return;
-    this.piecesService
-      .add({ name: this.pieceName, composerId: this.selectedComposerId })
-      .subscribe(() => {
-        this.pieceName = '';
-        this.selectedComposerId = null;
-        this.piecesService.getAll().subscribe((res) => (this.pieces = res));
-      });
+
+    this.piecesService.addPiece(this.pieceName, this.selectedComposerId).subscribe(() => {
+      this.pieceName = '';
+      this.selectedComposerId = null;
+      this.refreshPieces();
+    });
   }
 
   addComposer() {
-    this.composersService.add(this.newComposer).subscribe(() => {
-      this.newComposer = {
-        firstName: '',
-        lastName: '',
-        birthYear: null,
-        deathYear: null,
-        nationality: '',
-      };
-      this.composersService.getAll().subscribe((res) => (this.composers = res));
+    if (!this.newComposer.firstName || !this.newComposer.lastName) return;
+    this.composersService.addComposer(this.newComposer).subscribe(() => {
+      this.refreshComposers();
     });
   }
 
   addCollection() {
-    if (!this.newCollection.name || !this.newCollection.composerId) return;
-    this.collectionsService.add(this.newCollection).subscribe(() => {
-      this.newCollection = { name: '', composerId: null };
-      this.collectionsService.getAll().subscribe((res) => (this.collections = res));
-    });
+    if (!this.newCollection.name || this.newCollection.composerId == null) return;
+    this.collectionsService
+      .addCollection(this.newCollection.name, this.newCollection.composerId)
+      .subscribe(() => {
+        this.refreshCollections();
+      });
   }
 
   addPieceSyllabus() {
     const { pieceId, collectionId, syllabusId, gradeId } = this.newPieceSyllabus;
-    if (!(pieceId || collectionId) || !(syllabusId && gradeId)) return;
 
-    const payload: any = {};
-    if (pieceId) payload.pieceId = pieceId;
-    if (collectionId) payload.collectionId = collectionId;
-    payload.syllabusId = syllabusId;
-    payload.gradeId = gradeId;
+    if (!(pieceId || collectionId) || syllabusId == null || gradeId == null) return;
 
-    this.pieceSyllabiService.add(payload).subscribe(() => {
-      this.newPieceSyllabus = {
-        pieceId: null,
-        collectionId: null,
-        syllabusId: null,
-        gradeId: null,
-      };
-      this.pieceSyllabiService.getDetails().subscribe((res) => (this.piecesWithDetails = res));
-    });
+    this.pieceSyllabiService
+      .addPieceSyllabiByIds(pieceId, collectionId, syllabusId, gradeId)
+      .subscribe(() => {
+        this.refreshPieceSyllabi();
+      });
   }
 
+  get isFormValid(): boolean {
+    return !!this.pieceName && this.selectedComposerId != null;
+  }
+
+  // ------------------- FILTER -------------------
   onComposerChange() {
     this.filterByComposer();
   }
@@ -148,7 +172,6 @@ export class Home implements OnInit {
     this.newPieceSyllabus.collectionId = null;
   }
 
-  // ----- GRADES/SYLLABI: TEMPORARY STUB -----
   onSyllabusChange() {
     this.filterBySyllabus();
   }
@@ -162,7 +185,6 @@ export class Home implements OnInit {
     this.filteredGrades = this.grades.filter(
       (g) => g.syllabus?.id === this.newPieceSyllabus.syllabusId
     );
-
     this.newPieceSyllabus.gradeId = null;
   }
 
@@ -172,5 +194,30 @@ export class Home implements OnInit {
       this.newPieceSyllabus.syllabusId != null &&
       this.newPieceSyllabus.gradeId != null
     );
+  }
+
+  // ------------------- REFRESH -------------------
+  private refreshPieces() {
+    this.piecesService.getAll().subscribe((res) => {
+      this.pieces = res;
+      this.filterByComposer();
+    });
+  }
+
+  private refreshComposers() {
+    this.composersService.getAll().subscribe((res) => (this.composers = res));
+  }
+
+  private refreshCollections() {
+    this.collectionsService.getAll().subscribe((res) => {
+      this.collections = res;
+      this.filterByComposer();
+    });
+  }
+
+  private refreshPieceSyllabi() {
+    this.pieceSyllabiService.getDetails().subscribe((res) => {
+      this.piecesWithDetails = res;
+    });
   }
 }
