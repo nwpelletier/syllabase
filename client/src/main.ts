@@ -3,10 +3,7 @@ import { App } from './app/app';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CamelCaseInterceptor } from './app/core/interceptors/camel-case.interceptor';
-import { SnakeCaseInterceptor } from './app/core/interceptors/snake-case.interceptor';
 import { provideRouter, Routes } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { Home } from './app/pages/home/home';
 import { About } from './app/pages/about/about';
 
