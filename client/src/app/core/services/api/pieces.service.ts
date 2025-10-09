@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Piece } from '../../../models/piece.model';
+import { API_BASE_URL } from './api';
 
 @Injectable({ providedIn: 'root' })
 export class PiecesService {
-  private baseUrl = 'http://localhost:3000/pieces';
+  private baseUrl = `${API_BASE_URL}/pieces`;
 
   constructor(private http: HttpClient) {}
 

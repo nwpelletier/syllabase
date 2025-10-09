@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Grade } from '../../../models/grade.model';
+import { API_BASE_URL } from './api';
 
 @Injectable({ providedIn: 'root' })
 export class GradesService {
-  private baseUrl = 'http://localhost:3000/grades';
+  private baseUrl = `${API_BASE_URL}/grades`;
 
   constructor(private http: HttpClient) {}
 
