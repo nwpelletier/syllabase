@@ -4,6 +4,8 @@ import {
   Body,
   Get,
   Param,
+  Query,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { ComposerService } from "./composer.service";
 import { Composer } from "./composer.entity";
@@ -27,8 +29,21 @@ export class ComposerController {
     return this.composerService.findAll();
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: number): Promise<Composer> {
+  @Get("id/:id")
+  findOne(
+    @Param("id", ParseIntPipe) id: number
+  ): Promise<Composer> {
     return this.composerService.findOne(id);
+  }
+
+  @Get("filter")
+  async findBySyllabusAndGrade(
+    @Query("syllabusId", ParseIntPipe) syllabusId: number,
+    @Query("gradeId", ParseIntPipe) gradeId: number
+  ): Promise<Composer[]> {
+    return this.composerService.findBySyllabusAndGrade(
+      syllabusId,
+      gradeId
+    );
   }
 }
