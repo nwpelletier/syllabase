@@ -14,6 +14,10 @@ export class PiecesService {
     return this.http.get<Piece[]>(this.baseUrl);
   }
 
+  getByComposer(composerId: number): Observable<Piece[]> {
+    return this.http.get<Piece[]>(`${this.baseUrl}/composer/${composerId}`);
+  }
+
   addPiece(name: string, composerId: number): Observable<Piece> {
     return this.http.post<Piece>(this.baseUrl, { name, composerId });
   }

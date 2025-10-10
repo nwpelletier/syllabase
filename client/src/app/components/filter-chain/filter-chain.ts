@@ -16,8 +16,8 @@ export interface FilterSection {
 
 @Component({
   selector: 'app-filter-chain',
-  standalone: true, // <-- still standalone
-  imports: [CommonModule], // <-- import CommonModule here
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './filter-chain.html',
   styleUrls: ['./filter-chain.css'],
 })

@@ -4,6 +4,7 @@ import {
   Body,
   Get,
   Param,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { PieceService } from "./piece.service";
 import { Piece } from "./piece.entity";
@@ -23,6 +24,13 @@ export class PieceController {
   @Get()
   findAll(): Promise<Piece[]> {
     return this.pieceService.findAll();
+  }
+
+  @Get("composer/:composerId")
+  findByEra(
+    @Param("composerId", ParseIntPipe) composerId: number
+  ): Promise<Piece[]> {
+    return this.pieceService.findByComposer(composerId);
   }
 
   @Get(":id")

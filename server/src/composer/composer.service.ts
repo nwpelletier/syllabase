@@ -45,8 +45,8 @@ export class ComposerService {
 
   async findByEra(eraId: number): Promise<Composer[]> {
     return this.composerRepository.find({
-      where: { era: { id: eraId } }, // <-- use the relation property
-      relations: ["era"], // eager load Era
+      where: { era: { id: eraId } },
+      relations: ["era"],
     });
   }
 

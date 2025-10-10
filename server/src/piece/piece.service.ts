@@ -12,19 +12,19 @@ import { CreatePieceDto } from "./dto/create-piece.dto";
 export class PieceService {
   constructor(
     @InjectRepository(Piece)
-    private readonly pieceRepo: Repository<Piece>,
+    private readonly pieceRepository: Repository<Piece>,
     @InjectRepository(Composer)
-    private readonly composerRepo: Repository<Composer>
+    private readonly composerRepository: Repository<Composer>
   ) {}
 
   findAll(): Promise<Piece[]> {
-    return this.pieceRepo.find({
+    return this.pieceRepository.find({
       relations: ["composer"],
     });
   }
 
   async findOne(id: number): Promise<Piece> {
-    const piece = await this.pieceRepo.findOne({
+    const piece = await this.pieceRepository.findOne({
       where: { id },
       relations: ["composer", "collection"],
     });
@@ -36,18 +36,27 @@ export class PieceService {
     return piece;
   }
 
+  async findByComposer(
+    composerId: number
+  ): Promise<Piece[]> {
+    return this.pieceRepository.find({
+      where: { composer: { id: composerId } },
+      relations: ["composer"],
+    });
+  }
+
   async create(dto: CreatePieceDto): Promise<Piece> {
     const composer = dto.composerId
-      ? await this.composerRepo.findOneBy({
+      ? await this.composerRepository.findOneBy({
           id: dto.composerId,
         })
       : undefined;
 
-    const piece = this.pieceRepo.create({
+    const piece = this.pieceRepository.create({
       name: dto.name,
       composer: composer ?? undefined,
     });
 
-    return this.pieceRepo.save(piece);
+    return this.pieceRepository.save(piece);
   }
 }
