@@ -9,7 +9,7 @@ import { Collection } from "../collection/collection.entity";
 import { Syllabus } from "../syllabus/syllabus.entity";
 import { Grade } from "../grade/grade.entity";
 
-@Entity({ schema: "syllabus_data", name: "piece_syllabi" })
+@Entity({ name: "piece_syllabi" })
 export class PieceSyllabus {
   @PrimaryGeneratedColumn()
   id!: number;

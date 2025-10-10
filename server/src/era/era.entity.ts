@@ -1,13 +1,12 @@
 import {
   Entity,
+  PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  PrimaryGeneratedColumn,
 } from "typeorm";
-
 import { Composer } from "../composer/composer.entity";
 
-@Entity({ name: "eras" })
+@Entity({ name: "eras", schema: "public" }) // <-- explicitly set schema
 export class Era {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -15,9 +14,7 @@ export class Era {
   @Column()
   name!: string;
 
-  @OneToMany(
-    () => Composer,
-    (composer: Composer) => composer.era
-  )
+  // Optional: if you want composers linked to eras
+  @OneToMany(() => Composer, (composer) => composer.era)
   composers!: Composer[];
 }

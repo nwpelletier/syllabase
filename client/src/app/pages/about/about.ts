@@ -1,6 +1,6 @@
-// about.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import {
   FilterChain,
   FilterOption,
@@ -32,17 +32,26 @@ export class About implements OnInit {
   ];
 
   selected: Record<string, FilterOption | null> = {};
+  pingMessage: string = ''; // <-- backend message
 
   constructor(
     private composersService: ComposersService,
     private eraService: ErasService,
-    private piecesService: PiecesService
+    private piecesService: PiecesService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
+    // Fetch eras
     this.eraService.getAll().subscribe((eras: Era[]) => {
       this.eras = eras.map((e) => ({ id: e.id, label: e.name }));
       this.sections.find((s) => s.name === 'Era')!.options = this.eras;
+    });
+
+    // Direct HTTP call to backend /ping
+    this.http.get<{ message: string }>('http://localhost:3000/ping').subscribe({
+      next: (res) => (this.pingMessage = res.message),
+      error: (err) => console.error('Error fetching ping:', err),
     });
   }
 
