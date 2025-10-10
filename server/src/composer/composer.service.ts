@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 import { Composer } from "./composer.entity";
 import { Piece } from "../piece/piece.entity";
 import { Collection } from "../collection/collection.entity";
+import { Era } from "../era/era.entity";
 import { PieceSyllabus } from "../piece_syllabus/piece_syllabus.entity";
 import { CreateComposerDto } from "./dto/create-composer.dto";
 
@@ -20,7 +21,9 @@ export class ComposerService {
     @InjectRepository(Collection)
     private collectionRepository: Repository<Collection>,
     @InjectRepository(PieceSyllabus)
-    private pieceSyllabiRepository: Repository<PieceSyllabus>
+    private pieceSyllabiRepository: Repository<PieceSyllabus>,
+    @InjectRepository(Era)
+    private eraRepository: Repository<Era>
   ) {}
 
   findAll(): Promise<Composer[]> {
@@ -38,6 +41,13 @@ export class ComposerService {
       );
     }
     return composer;
+  }
+
+  async findByEra(eraId: number): Promise<Composer[]> {
+    return this.composerRepository.find({
+      where: { era: { id: eraId } }, // <-- use the relation property
+      relations: ["era"], // eager load Era
+    });
   }
 
   async findBySyllabusAndGrade(

@@ -4,9 +4,12 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { Piece } from "../piece/piece.entity";
 import { Collection } from "../collection/collection.entity";
+import { Era } from "../era/era.entity";
 
 @Entity({ name: "composers" })
 export class Composer {
@@ -28,8 +31,9 @@ export class Composer {
   @Column({ nullable: true })
   nationality?: string;
 
-  @Column({ type: "int", nullable: true })
-  era_id?: number;
+  @ManyToOne(() => Era)
+  @JoinColumn({ name: "era_id" })
+  era?: Era;
 
   @OneToMany(() => Piece, (piece) => piece.composer)
   pieces!: Piece[];

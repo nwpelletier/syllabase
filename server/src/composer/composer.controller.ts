@@ -36,6 +36,13 @@ export class ComposerController {
     return this.composerService.findOne(id);
   }
 
+  @Get("era/:eraId")
+  findByEra(
+    @Param("eraId", ParseIntPipe) eraId: number
+  ): Promise<Composer[]> {
+    return this.composerService.findByEra(eraId);
+  }
+
   @Get("filter")
   async findBySyllabusAndGrade(
     @Query("syllabusId", ParseIntPipe) syllabusId: number,

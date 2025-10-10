@@ -3,6 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Composer } from "./composer.entity";
 import { Collection } from "../collection/collection.entity";
 import { Piece } from "../piece/piece.entity";
+import { Era } from "../era/era.entity";
 import { ComposerService } from "./composer.service";
 import { ComposerController } from "./composer.controller";
 import { PieceSyllabus } from "../piece_syllabus/piece_syllabus.entity";
@@ -15,6 +16,7 @@ import { PieceController } from "../piece/piece.controller";
       Collection,
       Piece,
       PieceSyllabus,
+      Era,
     ]),
   ],
   controllers: [ComposerController],

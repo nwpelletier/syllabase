@@ -1,0 +1,17 @@
+<div class="filter-chain">
+  <ng-container *ngFor="let section of sections">
+    <div class="section" *ngIf="isVisible(section)">
+      <div class="section-title">{{ section.name }}</div>
+      <div class="pills">
+        <button
+          *ngFor="let option of section.options"
+          class="pill"
+          [class.selected]="isSelected(section, option)"
+          (click)="onSelect(section, option)"
+        >
+          {{ option.label }}
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>

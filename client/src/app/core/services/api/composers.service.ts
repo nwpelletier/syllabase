@@ -14,6 +14,10 @@ export class ComposersService {
     return this.http.get<Composer[]>(this.baseUrl);
   }
 
+  getByEra(eraId: number): Observable<Composer[]> {
+    return this.http.get<Composer[]>(`${this.baseUrl}/era/${eraId}`);
+  }
+
   addComposer(newComposer: Composer): Observable<Composer> {
     return this.http.post<Composer>(this.baseUrl, newComposer);
   }
