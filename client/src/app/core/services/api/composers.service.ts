@@ -14,6 +14,14 @@ export class ComposersService {
     return this.http.get<Composer[]>(this.baseUrl);
   }
 
+  filter(filters: Record<string, string | number>): Observable<Composer[]> {
+    const params = new URLSearchParams();
+    for (const key in filters) {
+      if (filters[key] != null) params.set(key, filters[key].toString());
+    }
+    return this.http.get<Composer[]>(`${this.baseUrl}/filter?${params.toString()}`);
+  }
+
   getByEra(eraId: number): Observable<Composer[]> {
     return this.http.get<Composer[]>(`${this.baseUrl}/era/${eraId}`);
   }

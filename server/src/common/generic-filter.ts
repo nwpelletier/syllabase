@@ -4,7 +4,8 @@ export async function applyFilters<T extends ObjectLiteral>(
   repository: Repository<T>,
   filters: Record<string, string>,
   allowedKeys: string[],
-  joins: { relation: string; alias: string }[] = []
+  joins: { relation: string; alias: string }[] = [],
+  fieldMap: Record<string, string> = {}
 ): Promise<T[]> {
   const qb = repository.createQueryBuilder("entity");
 
@@ -13,10 +14,13 @@ export async function applyFilters<T extends ObjectLiteral>(
   );
 
   for (const key of allowedKeys) {
-    if (filters[key]) {
-      qb.andWhere(`entity.${key} = :${key}`, {
-        [key]: filters[key],
-      });
+    if (filters[key] != null && filters[key] !== "") {
+      qb.andWhere(
+        `${fieldMap?.[key] ?? `entity.${key}`} = :${key}`,
+        {
+          [key]: filters[key],
+        }
+      );
     }
   }
 

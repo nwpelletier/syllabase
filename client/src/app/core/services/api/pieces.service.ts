@@ -15,7 +15,6 @@ export class PiecesService {
   }
 
   filter(filters: Record<string, string | number>): Observable<Piece[]> {
-    // Convert numbers to strings automatically
     const params = new URLSearchParams();
     for (const key in filters) {
       if (filters[key] != null) params.set(key, filters[key].toString());

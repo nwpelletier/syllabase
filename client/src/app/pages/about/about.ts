@@ -53,15 +53,16 @@ export class About implements OnInit {
     const composer = selection['Composer'];
 
     if (era) {
-      this.composersService.getByEra(era.id).subscribe((composers: Composer[]) => {
+      this.composersService.filter({ eraId: era.id }).subscribe((composers: Composer[]) => {
         this.composers = composers.map((c) => ({
           id: c.id,
-          label: `${c.firstName} ${c.lastName}`,
+          label: c.lastName + ', ' + c.firstName,
         }));
         this.sections.find((s) => s.name === 'Composer')!.options = this.composers;
       });
     } else {
       this.composers = [];
+      this.sections.find((s) => s.name === 'Composer')!.options = [];
     }
 
     if (composer) {

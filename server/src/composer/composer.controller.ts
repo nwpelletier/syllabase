@@ -29,12 +29,12 @@ export class ComposerController {
     return this.composerService.findAll();
   }
 
-  @Get("era/:eraId")
-  findByEra(
-    @Param("eraId", ParseIntPipe) eraId: number
-  ): Promise<Composer[]> {
-    return this.composerService.findByEra(eraId);
-  }
+  // @Get("era/:eraId")
+  // findByEra(
+  //   @Param("eraId", ParseIntPipe) eraId: number
+  // ): Promise<Composer[]> {
+  //   return this.composerService.findByEra(eraId);
+  // }
 
   @Get("filter")
   async filter(

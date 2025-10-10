@@ -43,25 +43,19 @@ export class PieceService {
   async filter(
     query: Record<string, string>
   ): Promise<Piece[]> {
-    const qb =
-      this.pieceRepository.createQueryBuilder("piece");
-
-    qb.leftJoinAndSelect("piece.composer", "composer");
-    qb.leftJoinAndSelect("piece.pieceSyllabi", "ps");
-
-    if (query.composerId) {
-      qb.andWhere("composer.id = :composerId", {
-        composerId: query.composerId,
-      });
-    }
-
-    if (query.collectionId) {
-      qb.andWhere("ps.collection_id = :collectionId", {
-        collectionId: query.collectionId,
-      });
-    }
-
-    return qb.getMany();
+    return applyFilters(
+      this.pieceRepository,
+      query,
+      ["composerId", "collectionId"],
+      [
+        { relation: "composer", alias: "composer" },
+        { relation: "pieceSyllabi", alias: "ps" },
+      ],
+      {
+        collectionId: "ps.collection_id",
+        composerId: "composer.id",
+      }
+    );
   }
 
   async create(dto: CreatePieceDto): Promise<Piece> {

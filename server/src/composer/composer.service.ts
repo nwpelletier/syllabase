@@ -10,6 +10,7 @@ import { Collection } from "../collection/collection.entity";
 import { Era } from "../era/era.entity";
 import { PieceSyllabus } from "../piece_syllabus/piece_syllabus.entity";
 import { CreateComposerDto } from "./dto/create-composer.dto";
+import { applyFilters } from "../common/generic-filter";
 
 @Injectable()
 export class ComposerService {
@@ -83,20 +84,15 @@ export class ComposerService {
   async filter(
     query: Record<string, string>
   ): Promise<Composer[]> {
-    const qb =
-      this.composerRepository.createQueryBuilder(
-        "composer"
-      );
-
-    qb.leftJoinAndSelect("composer.era", "era");
-
-    if (query.eraId) {
-      qb.andWhere("era.id = :eraId", {
-        eraId: query.eraId,
-      });
-    }
-
-    return qb.getMany();
+    return applyFilters(
+      this.composerRepository,
+      query,
+      ["eraId"],
+      [{ relation: "era", alias: "era" }],
+      {
+        eraId: "era.id",
+      }
+    );
   }
 
   async create(dto: CreateComposerDto): Promise<Composer> {
