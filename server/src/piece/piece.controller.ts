@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   Query,
-  ParseIntPipe,
 } from "@nestjs/common";
 import { PieceService } from "./piece.service";
 import { Piece } from "./piece.entity";

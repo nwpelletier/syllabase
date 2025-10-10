@@ -4,6 +4,7 @@ import {
   Body,
   Get,
   Param,
+  Query,
 } from "@nestjs/common";
 import { CollectionService } from "./collection.service";
 import { Collection } from "./collection.entity";
@@ -25,6 +26,13 @@ export class CollectionController {
   @Get()
   findAll(): Promise<Collection[]> {
     return this.collectionService.findAll();
+  }
+
+  @Get("filter")
+  async filter(
+    @Query() query: Record<string, string>
+  ): Promise<Collection[]> {
+    return this.collectionService.filter(query);
   }
 
   @Get(":id")
