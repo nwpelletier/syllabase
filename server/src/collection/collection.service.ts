@@ -12,9 +12,7 @@ import { CreateCollectionDto } from "./dto/create-collection.dto";
 export class CollectionService {
   constructor(
     @InjectRepository(Collection)
-    private readonly collectionRepo: Repository<Collection>,
-    @InjectRepository(Composer)
-    private readonly composerRepo: Repository<Composer>
+    private readonly collectionRepo: Repository<Collection>
   ) {}
 
   findAll(): Promise<Collection[]> {
@@ -39,15 +37,11 @@ export class CollectionService {
   async create(
     dto: CreateCollectionDto
   ): Promise<Collection> {
-    const composer = dto.composerId
-      ? await this.composerRepo.findOneBy({
-          id: dto.composerId,
-        })
-      : undefined;
-
     const collection = this.collectionRepo.create({
       name: dto.name,
-      composer: composer ?? undefined,
+      composer: dto.composerId
+        ? { id: dto.composerId }
+        : undefined,
     });
 
     return this.collectionRepo.save(collection);

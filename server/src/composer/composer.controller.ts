@@ -29,13 +29,6 @@ export class ComposerController {
     return this.composerService.findAll();
   }
 
-  @Get("id/:id")
-  findOne(
-    @Param("id", ParseIntPipe) id: number
-  ): Promise<Composer> {
-    return this.composerService.findOne(id);
-  }
-
   @Get("era/:eraId")
   findByEra(
     @Param("eraId", ParseIntPipe) eraId: number
@@ -56,5 +49,12 @@ export class ComposerController {
     @Query("gradeId", ParseIntPipe) gradeId: number
   ): Promise<Composer[]> {
     return this.composerService.findAllByGrade(gradeId);
+  }
+
+  @Get(":id")
+  findOne(
+    @Param("id", ParseIntPipe) id: number
+  ): Promise<Composer> {
+    return this.composerService.findOne(id);
   }
 }

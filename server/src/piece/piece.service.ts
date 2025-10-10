@@ -5,7 +5,6 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Piece } from "./piece.entity";
-import { Composer } from "../composer/composer.entity";
 import { CreatePieceDto } from "./dto/create-piece.dto";
 import { applyFilters } from "../common/generic-filter";
 
@@ -13,9 +12,7 @@ import { applyFilters } from "../common/generic-filter";
 export class PieceService {
   constructor(
     @InjectRepository(Piece)
-    private readonly pieceRepository: Repository<Piece>,
-    @InjectRepository(Composer)
-    private readonly composerRepository: Repository<Composer>
+    private readonly pieceRepository: Repository<Piece>
   ) {}
 
   findAll(): Promise<Piece[]> {
@@ -27,23 +24,20 @@ export class PieceService {
   async findOne(id: number): Promise<Piece> {
     const piece = await this.pieceRepository.findOne({
       where: { id },
-      relations: ["composer", "collection"],
+      relations: [
+        "composer",
+        "pieceSyllabi",
+        "pieceSyllabi.collection",
+      ],
     });
+
     if (!piece) {
       throw new NotFoundException(
         `Piece with id ${id} not found`
       );
     }
-    return piece;
-  }
 
-  async findByComposer(
-    composerId: number
-  ): Promise<Piece[]> {
-    return this.pieceRepository.find({
-      where: { composer: { id: composerId } },
-      relations: ["composer"],
-    });
+    return piece;
   }
 
   async filter(
@@ -71,17 +65,12 @@ export class PieceService {
   }
 
   async create(dto: CreatePieceDto): Promise<Piece> {
-    const composer = dto.composerId
-      ? await this.composerRepository.findOneBy({
-          id: dto.composerId,
-        })
-      : undefined;
-
     const piece = this.pieceRepository.create({
       name: dto.name,
-      composer: composer ?? undefined,
+      composer: dto.composerId
+        ? { id: dto.composerId }
+        : undefined,
     });
-
     return this.pieceRepository.save(piece);
   }
 }

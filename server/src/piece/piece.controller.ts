@@ -27,13 +27,6 @@ export class PieceController {
     return this.pieceService.findAll();
   }
 
-  @Get("composer/:composerId")
-  findByEra(
-    @Param("composerId", ParseIntPipe) composerId: number
-  ): Promise<Piece[]> {
-    return this.pieceService.findByComposer(composerId);
-  }
-
   @Get("filter")
   async filter(
     @Query() query: Record<string, string>

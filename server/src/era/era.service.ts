@@ -21,12 +21,15 @@ export class EraService {
   async findOne(id: number): Promise<Era> {
     const era = await this.eraRepository.findOne({
       where: { id },
+      relations: ["composers"],
     });
+
     if (!era) {
       throw new NotFoundException(
         `Era with ID ${id} not found`
       );
     }
+
     return era;
   }
 

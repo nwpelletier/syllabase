@@ -3,29 +3,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { PieceSyllabus } from "./piece_syllabus.entity";
 import { CreatePieceSyllabusDto } from "./dto/create-piece_syllabus.dto";
-import { Piece } from "../piece/piece.entity";
-import { Syllabus } from "../syllabus/syllabus.entity";
-import { Grade } from "../grade/grade.entity";
-import { Collection } from "../collection/collection.entity";
-import { Composer } from "../composer/composer.entity";
 
 @Injectable()
 export class PieceSyllabusService {
   constructor(
     @InjectRepository(PieceSyllabus)
-    private readonly repo: Repository<PieceSyllabus>,
-
-    @InjectRepository(Piece)
-    private readonly pieceRepo: Repository<Piece>,
-
-    @InjectRepository(Syllabus)
-    private readonly syllabusRepo: Repository<Syllabus>,
-
-    @InjectRepository(Grade)
-    private readonly gradeRepo: Repository<Grade>,
-
-    @InjectRepository(Collection)
-    private readonly collectionRepo: Repository<Collection>
+    private readonly repo: Repository<PieceSyllabus>
   ) {}
 
   // --- Existing methods ---
@@ -44,37 +27,26 @@ export class PieceSyllabusService {
   async create(
     dto: CreatePieceSyllabusDto
   ): Promise<PieceSyllabus> {
-    const piece = dto.pieceId
-      ? await this.pieceRepo.findOneBy({ id: dto.pieceId })
-      : undefined;
-
-    const syllabus = dto.syllabusId
-      ? await this.syllabusRepo.findOneBy({
-          id: dto.syllabusId,
-        })
-      : undefined;
-
-    const grade = dto.gradeId
-      ? await this.gradeRepo.findOneBy({ id: dto.gradeId })
-      : undefined;
-
-    const collection = dto.collectionId
-      ? await this.collectionRepo.findOneBy({
-          id: dto.collectionId,
-        })
-      : undefined;
-
-    if (!piece && !syllabus && !grade && !collection) {
+    if (
+      !dto.pieceId &&
+      !dto.collectionId &&
+      !dto.syllabusId &&
+      !dto.gradeId
+    ) {
       throw new Error(
         "At least one of piece, collection, syllabus, or grade must be provided."
       );
     }
 
     const entry = this.repo.create({
-      piece,
-      syllabus,
-      grade,
-      collection,
+      piece: dto.pieceId ? { id: dto.pieceId } : undefined,
+      syllabus: dto.syllabusId
+        ? { id: dto.syllabusId }
+        : undefined,
+      grade: dto.gradeId ? { id: dto.gradeId } : undefined,
+      collection: dto.collectionId
+        ? { id: dto.collectionId }
+        : undefined,
     });
 
     return this.repo.save(entry);

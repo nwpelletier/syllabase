@@ -5,26 +5,23 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Grade } from "./grade.entity";
-import { Syllabus } from "../syllabus/syllabus.entity";
 import { CreateGradeDto } from "./dto/create-grade.dto";
 
 @Injectable()
 export class GradeService {
   constructor(
     @InjectRepository(Grade)
-    private readonly gradeRepo: Repository<Grade>,
-    @InjectRepository(Syllabus)
-    private readonly syllabusRepo: Repository<Syllabus>
+    private readonly gradeRepository: Repository<Grade>
   ) {}
 
   findAll(): Promise<Grade[]> {
-    return this.gradeRepo.find({
+    return this.gradeRepository.find({
       relations: ["syllabus"],
     });
   }
 
   async findOne(id: number): Promise<Grade> {
-    const grade = await this.gradeRepo.findOne({
+    const grade = await this.gradeRepository.findOne({
       where: { id },
       relations: ["syllabus"],
     });
@@ -37,16 +34,13 @@ export class GradeService {
   }
 
   async create(dto: CreateGradeDto): Promise<Grade> {
-    const syllabus = dto.syllabusId
-      ? await this.gradeRepo.findOneBy({
-          id: dto.syllabusId,
-        })
-      : undefined;
-
-    const grade = this.gradeRepo.create({
+    const grade = this.gradeRepository.create({
       grade: dto.name,
-      syllabus: syllabus ?? undefined,
+      syllabus: dto.syllabusId
+        ? { id: dto.syllabusId }
+        : undefined,
     });
-    return this.gradeRepo.save(grade);
+
+    return this.gradeRepository.save(grade);
   }
 }
