@@ -44,13 +44,17 @@ export class ComposerController {
   }
 
   @Get("filter")
-  async findBySyllabusAndGrade(
-    @Query("syllabusId", ParseIntPipe) syllabusId: number,
+  async filter(
+    @Query() query: Record<string, string>
+  ): Promise<Composer[]> {
+    return this.composerService.filter(query);
+  }
+
+  // Unique @Get because no direct relation (can't use filter method)
+  @Get("by-grade")
+  async findAllByGrade(
     @Query("gradeId", ParseIntPipe) gradeId: number
   ): Promise<Composer[]> {
-    return this.composerService.findBySyllabusAndGrade(
-      syllabusId,
-      gradeId
-    );
+    return this.composerService.findAllByGrade(gradeId);
   }
 }

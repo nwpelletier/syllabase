@@ -14,8 +14,13 @@ export class PiecesService {
     return this.http.get<Piece[]>(this.baseUrl);
   }
 
-  getByComposer(composerId: number): Observable<Piece[]> {
-    return this.http.get<Piece[]>(`${this.baseUrl}/composer/${composerId}`);
+  filter(filters: Record<string, string | number>): Observable<Piece[]> {
+    // Convert numbers to strings automatically
+    const params = new URLSearchParams();
+    for (const key in filters) {
+      if (filters[key] != null) params.set(key, filters[key].toString());
+    }
+    return this.http.get<Piece[]>(`${this.baseUrl}/filter?${params.toString()}`);
   }
 
   addPiece(name: string, composerId: number): Observable<Piece> {

@@ -65,8 +65,7 @@ export class About implements OnInit {
     }
 
     if (composer) {
-      // (assuming you have a piecesService)
-      this.piecesService.getByComposer(composer.id).subscribe((pieces: Piece[]) => {
+      this.piecesService.filter({ composerId: composer.id }).subscribe((pieces: Piece[]) => {
         this.pieces = pieces.map((p) => ({
           id: p.id,
           label: p.name,

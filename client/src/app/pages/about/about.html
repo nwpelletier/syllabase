@@ -6,11 +6,4 @@
     [sections]="sections"
     (selectionChange)="onFilterChange($event)"
   ></app-filter-chain>
-
-  <!-- Optionally, show selected composers -->
-  <div class="selected-composers" *ngIf="selected['Composer']">
-    <h2>Selected Composer:</h2>
-    <p>{{ selected['Composer']?.label }}</p>
-    <h3>Works by {{ selected['Composer']?.label }}</h3>
-  </div>
 </div>

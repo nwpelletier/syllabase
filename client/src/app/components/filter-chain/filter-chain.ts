@@ -1,6 +1,6 @@
 // filter-chain.ts
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common'; // <-- add this
+import { CommonModule } from '@angular/common';
 
 export interface FilterOption {
   id: number;

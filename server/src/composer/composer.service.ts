@@ -50,13 +50,9 @@ export class ComposerService {
     });
   }
 
-  async findBySyllabusAndGrade(
-    syllabusId: number,
+  async findAllByGrade(
     gradeId: number
   ): Promise<Composer[]> {
-    console.log("Selected syllabusId:", syllabusId);
-    console.log("Selected gradeId:", gradeId);
-
     const entries = await this.pieceSyllabiRepository
       .createQueryBuilder("ps")
       .leftJoinAndSelect("ps.piece", "piece")
@@ -66,35 +62,41 @@ export class ComposerService {
         "collection.composer",
         "collectionComposer"
       )
-      .where("ps.syllabus_id = :syllabusId", { syllabusId })
-      .andWhere("ps.grade_id = :gradeId", { gradeId })
+      .where("ps.grade_id = :gradeId", { gradeId })
       .getMany();
 
-    console.log(
-      "Querying the following pieces:",
-      entries.map((ps) => ps.piece?.name).filter(Boolean)
-    );
-    console.log(
-      "Querying the following collections:",
-      entries
-        .map((ps) => ps.collection?.name)
-        .filter(Boolean)
-    );
-
-    const composers = entries
-      .map((ps) => [
-        ps.piece?.composer,
-        ps.collection?.composer,
-      ])
-      .flat()
-      .filter((c): c is Composer => !!c);
-
-    const uniqueComposers = composers.filter(
-      (c, i, arr) =>
-        arr.findIndex((x) => x.id === c.id) === i
+    const uniqueComposers = Array.from(
+      new Map(
+        entries
+          .flatMap((ps) => [
+            ps.piece?.composer,
+            ps.collection?.composer,
+          ])
+          .filter((c): c is Composer => !!c)
+          .map((c) => [c.id, c])
+      ).values()
     );
 
     return uniqueComposers;
+  }
+
+  async filter(
+    query: Record<string, string>
+  ): Promise<Composer[]> {
+    const qb =
+      this.composerRepository.createQueryBuilder(
+        "composer"
+      );
+
+    qb.leftJoinAndSelect("composer.era", "era");
+
+    if (query.eraId) {
+      qb.andWhere("era.id = :eraId", {
+        eraId: query.eraId,
+      });
+    }
+
+    return qb.getMany();
   }
 
   async create(dto: CreateComposerDto): Promise<Composer> {

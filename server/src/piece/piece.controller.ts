@@ -4,6 +4,7 @@ import {
   Body,
   Get,
   Param,
+  Query,
   ParseIntPipe,
 } from "@nestjs/common";
 import { PieceService } from "./piece.service";
@@ -31,6 +32,13 @@ export class PieceController {
     @Param("composerId", ParseIntPipe) composerId: number
   ): Promise<Piece[]> {
     return this.pieceService.findByComposer(composerId);
+  }
+
+  @Get("filter")
+  async filter(
+    @Query() query: Record<string, string>
+  ): Promise<Piece[]> {
+    return this.pieceService.filter(query);
   }
 
   @Get(":id")
