@@ -1,0 +1,5 @@
+footer {
+  height: var(--footer-height);
+  background-color: var(--bg-color);
+  border-top: var(--border);
+}

@@ -6,15 +6,12 @@
 }
 
 .nav a {
-  color: black;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   text-decoration: none;
   font-size: 1.4rem;
   font-weight: 200;
   letter-spacing: 0.2rem;
-}
-
-.nav.isDark a {
-  color: white;
 }
 
 @media screen and (max-width: 600px) {

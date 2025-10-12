@@ -1,0 +1,21 @@
+<h2>Piece Details</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Piece</th>
+      <th>Composer</th>
+      <th>Collection</th>
+      <th>Syllabus</th>
+      <th>Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of piecesWithDetails">
+      <td>{{ item.pieceName }}</td>
+      <td>{{ item.composer }}</td>
+      <td>{{ item.collection || '-' }}</td>
+      <td>{{ item.syllabus || '-' }}</td>
+      <td>{{ item.grade || '-' }}</td>
+    </tr>
+  </tbody>
+</table>
