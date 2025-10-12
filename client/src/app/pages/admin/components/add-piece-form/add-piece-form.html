@@ -1,0 +1,19 @@
+<h2>Add a new piece</h2>
+<form (ngSubmit)="addPiece()">
+  <label>
+    Piece Name:
+    <input type="text" [(ngModel)]="pieceName" name="pieceNameAdd" />
+  </label>
+
+  <label>
+    Composer:
+    <select [(ngModel)]="selectedComposerId" name="composerSelectAdd">
+      <option [ngValue]="null">-- Select Composer --</option>
+      <option *ngFor="let composer of composers" [ngValue]="composer.id">
+        {{ composer.firstName }} {{ composer.lastName }}
+      </option>
+    </select>
+  </label>
+
+  <button type="submit" [disabled]="!isFormValid">Add Piece</button>
+</form>

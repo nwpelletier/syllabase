@@ -5,11 +5,13 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CamelCaseInterceptor } from './app/core/interceptors/camel-case.interceptor';
 import { provideRouter, Routes } from '@angular/router';
 import { Home } from './app/pages/home/home';
+import { Admin } from './app/pages/admin/admin';
 import { About } from './app/pages/about/about';
 
 const routes: Routes = [
   { path: '', component: Home },
   { path: 'about', component: About },
+  { path: 'admin', component: Admin },
 ];
 
 bootstrapApplication(App, {

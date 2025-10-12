@@ -1,0 +1,17 @@
+<h2>Add a new Collection</h2>
+<form (ngSubmit)="addCollection()">
+  <input
+    type="text"
+    placeholder="Collection Name"
+    [(ngModel)]="newCollection.name"
+    name="collectionName"
+    required
+  />
+  <select [(ngModel)]="newCollection.composer" name="collectionComposer" required>
+    <option [ngValue]="null">-- Select Composer --</option>
+    <option *ngFor="let composer of composers" [ngValue]="composer">
+      {{ composer.firstName }} {{ composer.lastName }}
+    </option>
+  </select>
+  <button type="submit">Add Collection</button>
+</form>

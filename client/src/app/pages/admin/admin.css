@@ -1,0 +1,9 @@
+.admin-forms-container {
+  margin: 4em 10vw;
+  border: 5px solid rgb(8, 30, 90);
+  border-radius: 10px;
+  padding: 3em;
+  display: flex;
+  flex-direction: column;
+  gap: 4em;
+}
