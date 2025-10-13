@@ -1,14 +1,7 @@
-.isDark {
-  background-color: #222;
-  color: #fff;
-  padding: 1rem;
+.page-layout {
+  padding: 5vw;
 }
 
-div {
-  padding: 1rem;
-}
-
-table th {
-  min-width: 200px;
-  text-align: left; /* optional */
+.li-bold {
+  font-weight: bold;
 }

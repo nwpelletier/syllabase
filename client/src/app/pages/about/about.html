@@ -1,10 +1,6 @@
-<div class="about-page">
-  <h1>About</h1>
-
-  <!-- Filter chain for Era → Composer -->
+<div class="about-page page-layout">
   <app-filter-chain
     [sections]="sections"
     (selectionChange)="onFilterChange($event)"
   ></app-filter-chain>
-  <p><strong>Message:</strong> {{ pingMessage }}</p>
 </div>
