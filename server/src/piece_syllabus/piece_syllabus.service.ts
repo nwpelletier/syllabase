@@ -62,7 +62,7 @@ export class PieceSyllabusService {
       .leftJoin("ps.grade", "g")
       .select([
         'p.name AS "pieceName"',
-        "COALESCE(c.first_name, '') || ' ' || COALESCE(c.last_name, '') AS \"composer\"",
+        "COALESCE(c.\"firstName\", '') || ' ' || COALESCE(c.\"lastName\", '') AS \"composer\"",
         'col.name AS "collection"',
         's.name AS "syllabus"',
         'g.grade AS "grade"',

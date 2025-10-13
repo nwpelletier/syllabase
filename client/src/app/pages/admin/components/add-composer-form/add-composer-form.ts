@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Composer } from '../../../../models/composer.model';
-import { ComposersService } from '../../../../core/services/api/composers.service';
+import { Era } from '../../../../models/era.model';
+import { AdminDataService } from '../../services/admin-data.service';
 
 @Component({
   selector: 'app-add-composer-form',
@@ -11,35 +11,55 @@ import { ComposersService } from '../../../../core/services/api/composers.servic
   templateUrl: './add-composer-form.html',
   styleUrls: ['../../admin.css'],
 })
-export class AddComposerForm {
-  @Input() composers: Composer[] = [];
-  newComposer: Composer = {
-    id: 0,
-    firstName: '',
-    lastName: '',
-    birthYear: null,
-    deathYear: null,
-    nationality: '',
+export class AddComposerForm implements OnInit {
+  newComposer!: {
+    firstName: string;
+    lastName: string;
+    birthYear: number | null;
+    deathYear: number | null;
+    nationality: string;
   };
+  selectedEraId: number | null = null;
 
-  constructor(private composersService: ComposersService) {}
+  eras: Era[] = [];
+
+  constructor(private adminData: AdminDataService) {}
+
+  ngOnInit() {
+    this.newComposer = this.createEmptyComposer();
+
+    // Subscribe to eras like the pieces form does
+    this.adminData.eras$.subscribe((e) => (this.eras = e));
+    this.adminData.loadAllData(); // ensure eras are loaded
+  }
+
+  createEmptyComposer() {
+    return {
+      firstName: '',
+      lastName: '',
+      birthYear: null,
+      deathYear: null,
+      nationality: '',
+    };
+  }
 
   addComposer() {
-    if (!this.newComposer.firstName || !this.newComposer.lastName) return;
-
-    const exists = this.composers.some(
-      (c) =>
-        c.firstName.toLowerCase() === this.newComposer.firstName.toLowerCase() &&
-        c.lastName.toLowerCase() === this.newComposer.lastName.toLowerCase()
-    );
-
-    if (exists) {
-      alert('Composer already exists!');
+    console.log('Selected Era ID:', this.selectedEraId);
+    if (!this.selectedEraId) {
+      alert('Please select an Era');
       return;
     }
 
-    this.composersService.addComposer(this.newComposer).subscribe(() => {
-      this.newComposer = this.composersService.createEmptyComposer();
+    this.adminData.addComposer({
+      firstName: this.newComposer.firstName,
+      lastName: this.newComposer.lastName,
+      birthYear: this.newComposer.birthYear ?? 0,
+      deathYear: this.newComposer.deathYear ?? 0,
+      nationality: this.newComposer.nationality || '',
+      eraId: this.selectedEraId,
     });
+
+    this.newComposer = this.createEmptyComposer();
+    this.selectedEraId = null;
   }
 }

@@ -2,7 +2,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     sans-serif;
 }
 
@@ -18,7 +18,7 @@ p {
 :root {
   --bg-color: rgb(255, 255, 255);
   --page-bg-color: rgb(255, 255, 255);
-  --panel-color: rgb(230, 241, 255);
+  --panel-color: rgb(255, 255, 255);
   --border: 1px solid grey;
   --text-color: rgb(37, 31, 56);
   --header-height: 7vh;

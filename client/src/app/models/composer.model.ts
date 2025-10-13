@@ -1,3 +1,5 @@
+import { Era } from './era.model';
+
 export interface Composer {
   id: number;
   firstName: string;
@@ -5,4 +7,5 @@ export interface Composer {
   birthYear?: number | null;
   deathYear?: number | null;
   nationality?: string;
+  era?: Era | null; // <-- like Piece has composer?: Composer
 }

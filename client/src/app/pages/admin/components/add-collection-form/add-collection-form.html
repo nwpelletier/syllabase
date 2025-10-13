@@ -8,7 +8,7 @@
     required
   />
   <select [(ngModel)]="newCollection.composer" name="collectionComposer" required>
-    <option [ngValue]="null">-- Select Composer --</option>
+    <option [ngValue]="null">Composer</option>
     <option *ngFor="let composer of composers" [ngValue]="composer">
       {{ composer.firstName }} {{ composer.lastName }}
     </option>

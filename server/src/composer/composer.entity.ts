@@ -1,46 +1,36 @@
-// src/entities/composer.entity.ts
+// composer.entity.ts
 import {
   Entity,
-  Column,
   PrimaryGeneratedColumn,
-  OneToMany,
+  Column,
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { Piece } from "../piece/piece.entity";
-import { Collection } from "../collection/collection.entity";
 import { Era } from "../era/era.entity";
 
-@Entity({ name: "composers" })
+@Entity()
 export class Composer {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  first_name!: string;
+  firstName!: string;
 
   @Column()
-  last_name!: string;
+  lastName!: string;
 
-  @Column({ type: "int", nullable: true })
-  birth_year?: number;
-
-  @Column({ type: "int", nullable: true })
-  death_year?: number;
+  @Column()
+  birthYear!: number;
 
   @Column({ nullable: true })
-  nationality?: string;
+  deathYear?: number;
 
-  @ManyToOne(() => Era)
-  @JoinColumn({ name: "era_id" })
-  era?: Era;
+  @Column()
+  nationality!: string;
 
-  @OneToMany(() => Piece, (piece) => piece.composer)
-  pieces!: Piece[];
-
-  @OneToMany(
-    () => Collection,
-    (collection: Collection) => collection.composer
-  )
-  collections!: Collection[];
+  @ManyToOne(() => Era, (era) => era.composers, {
+    nullable: false,
+  })
+  @JoinColumn({ name: "eraId" })
+  era!: Era;
 }

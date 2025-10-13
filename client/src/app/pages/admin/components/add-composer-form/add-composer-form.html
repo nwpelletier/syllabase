@@ -1,38 +1,43 @@
-<h2>Add a new composer</h2>
+<h2>Add a New Composer</h2>
 <form (ngSubmit)="addComposer()">
   <input
     type="text"
     placeholder="First Name"
     [(ngModel)]="newComposer.firstName"
-    name="newComposerFirstName"
+    name="firstName"
     required
   />
   <input
     type="text"
     placeholder="Last Name"
     [(ngModel)]="newComposer.lastName"
-    name="newComposerLastName"
+    name="lastName"
     required
   />
   <input
     type="number"
     placeholder="Birth Year"
     [(ngModel)]="newComposer.birthYear"
-    name="newComposerBirthYear"
-    required
+    name="birthYear"
   />
   <input
     type="number"
     placeholder="Death Year"
     [(ngModel)]="newComposer.deathYear"
-    name="newComposerDeathYear"
+    name="deathYear"
   />
   <input
     type="text"
     placeholder="Nationality"
     [(ngModel)]="newComposer.nationality"
-    name="newComposerNationality"
-    required
+    name="nationality"
   />
+
+  <label>Era:</label>
+  <select [(ngModel)]="selectedEraId" name="eraSelect" required>
+    <option [ngValue]="null" disabled>Select Era</option>
+    <option *ngFor="let e of eras" [ngValue]="e.id">{{ e.name }}</option>
+  </select>
+
   <button type="submit">Add Composer</button>
 </form>

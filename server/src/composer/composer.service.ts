@@ -27,14 +27,17 @@ export class ComposerService {
     private eraRepository: Repository<Era>
   ) {}
 
+  // ✅ Include era explicitly
   findAll(): Promise<Composer[]> {
-    return this.composerRepository.find();
+    return this.composerRepository.find({
+      relations: ["era"],
+    });
   }
 
   async findOne(id: number): Promise<Composer> {
     const composer = await this.composerRepository.findOne({
       where: { id },
-      relations: ["pieces", "collections"],
+      relations: ["era", "pieces", "collections"], // include era
     });
     if (!composer) {
       throw new NotFoundException(
@@ -63,6 +66,14 @@ export class ComposerService {
         "collection.composer",
         "collectionComposer"
       )
+      .leftJoinAndSelect(
+        "pieceComposer.era",
+        "pieceComposerEra"
+      ) // include era
+      .leftJoinAndSelect(
+        "collectionComposer.era",
+        "collectionComposerEra"
+      ) // include era
       .where("ps.grade_id = :gradeId", { gradeId })
       .getMany();
 
@@ -97,12 +108,10 @@ export class ComposerService {
 
   async create(dto: CreateComposerDto): Promise<Composer> {
     const composer = this.composerRepository.create({
-      first_name: dto.firstName,
-      last_name: dto.lastName,
-      birth_year: dto.birthYear,
-      death_year: dto.deathYear,
-      nationality: dto.nationality,
+      ...dto,
+      era: { id: dto.eraId },
     });
+
     return this.composerRepository.save(composer);
   }
 }

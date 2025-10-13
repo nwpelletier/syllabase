@@ -1,11 +1,10 @@
+// composer/dto/create-composer.dto.ts
 import {
   IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from "class-validator";
-
-import { Type } from "class-transformer";
 
 export class CreateComposerDto {
   @IsString()
@@ -16,15 +15,16 @@ export class CreateComposerDto {
   @IsNotEmpty()
   lastName!: string;
 
-  @IsInt()
-  @Type(() => Number)
-  birthYear!: number;
-
-  @IsInt()
   @IsOptional()
-  @Type(() => Number)
+  birthYear?: number;
+
+  @IsOptional()
   deathYear?: number;
 
-  @IsString()
-  nationality!: string;
+  @IsOptional()
+  nationality?: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  eraId!: number; // just the id
 }

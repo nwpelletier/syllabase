@@ -10,10 +10,12 @@ export class ComposersService {
 
   constructor(private http: HttpClient) {}
 
+  /** Get all composers */
   getAll(): Observable<Composer[]> {
     return this.http.get<Composer[]>(this.baseUrl);
   }
 
+  /** Filter composers by arbitrary criteria, e.g., eraId */
   filter(filters: Record<string, string | number>): Observable<Composer[]> {
     const params = new URLSearchParams();
     for (const key in filters) {
@@ -22,22 +24,37 @@ export class ComposersService {
     return this.http.get<Composer[]>(`${this.baseUrl}/filter?${params.toString()}`);
   }
 
-  getByEra(eraId: number): Observable<Composer[]> {
-    return this.http.get<Composer[]>(`${this.baseUrl}/era/${eraId}`);
+  /** Add a new composer */
+  addComposer(composer: {
+    firstName: string;
+    lastName: string;
+    birthYear: number | null;
+    deathYear: number | null;
+    nationality: string;
+    eraId: number | null;
+  }): Observable<Composer> {
+    return this.http.post<Composer>(this.baseUrl, {
+      ...composer,
+      era_id: composer.eraId, // backend expects snake_case
+    });
   }
 
-  addComposer(newComposer: Composer): Observable<Composer> {
-    return this.http.post<Composer>(this.baseUrl, newComposer);
-  }
-
-  createEmptyComposer(): Composer {
+  /** Returns an empty composer object for forms */
+  createEmptyComposer(): {
+    firstName: string;
+    lastName: string;
+    birthYear: number | null;
+    deathYear: number | null;
+    nationality: string;
+    eraId: number | null;
+  } {
     return {
-      id: 0,
       firstName: '',
       lastName: '',
       birthYear: null,
       deathYear: null,
       nationality: '',
+      eraId: null,
     };
   }
 }

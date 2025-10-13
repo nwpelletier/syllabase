@@ -1,13 +1,13 @@
 <div class="admin-subpage">
   <div class="admin-forms-container">
     <app-add-era-form [eras]="eras"></app-add-era-form>
-    <app-add-composer-form [composers]="composers"></app-add-composer-form>
+    <app-add-composer-form></app-add-composer-form>
     <app-add-piece-form [composers]="composers"></app-add-piece-form>
     <app-add-collection-form
       [collections]="collections"
       [composers]="composers"
     ></app-add-collection-form>
-    <!-- Add Piece to Syllabus Form -->
+    Add Piece to Syllabus Form
     <div>
       <h2>Add Piece to Syllabus</h2>
       <form (ngSubmit)="addPieceSyllabus()">
@@ -18,7 +18,7 @@
             name="composerForPieceSyllabus"
             (ngModelChange)="onComposerChange()"
           >
-            <option [ngValue]="null">-- Select Composer --</option>
+            <option [ngValue]="null">Composer</option>
             <option *ngFor="let composer of composers" [ngValue]="composer.id">
               {{ composer.firstName }} {{ composer.lastName }}
             </option>
@@ -28,7 +28,7 @@
         <label>
           Piece:
           <select [(ngModel)]="newPieceSyllabus.pieceId" name="pieceForSyllabus">
-            <option [ngValue]="null">-- Select Piece --</option>
+            <option [ngValue]="null">Piece</option>
             <option *ngFor="let piece of filteredPieces" [ngValue]="piece.id">
               {{ piece.name }}
             </option>
@@ -38,7 +38,7 @@
         <label>
           Collection (optional):
           <select [(ngModel)]="newPieceSyllabus.collectionId" name="collectionForSyllabus">
-            <option [ngValue]="null">-- None --</option>
+            <option [ngValue]="null">None</option>
             <option *ngFor="let collection of filteredCollections" [ngValue]="collection.id">
               {{ collection.name }}
             </option>
@@ -52,7 +52,7 @@
             name="syllabusForSyllabus"
             (ngModelChange)="onSyllabusChange()"
           >
-            <option [ngValue]="null">-- Select Syllabus --</option>
+            <option [ngValue]="null">Syllabus</option>
             <option *ngFor="let syllabus of syllabi" [ngValue]="syllabus.id">
               {{ syllabus.name }}
             </option>
@@ -62,7 +62,7 @@
         <label>
           Grade:
           <select [(ngModel)]="newPieceSyllabus.gradeId" name="gradeForSyllabus">
-            <option [ngValue]="null">-- Select Grade --</option>
+            <option [ngValue]="null">Grade</option>
             <option *ngFor="let grade of filteredGrades" [ngValue]="grade.id">
               {{ grade.grade }}
             </option>

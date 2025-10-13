@@ -13,12 +13,55 @@
 }
 
 .admin-forms-container > * {
+  border: var(--border);
   background-color: var(--panel-color);
   padding: 1.6em;
+  box-shadow: 1px 1px 2px 2px rgb(194, 202, 204);
 }
 
 h2 {
+  padding-left: 0.4em;
+  margin-bottom: 0.6em;
   color: var(--text-color);
   font-weight: 400;
-  text-shadow: 1px 1px 1px rgb(194, 194, 194), -1px 0px 1px rgb(66, 127, 196);
+}
+
+table input,
+form input,
+table button,
+form button,
+button,
+select {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  height: 50px;
+  border: var(--border);
+  padding: 1em;
+  margin: 0.2em;
+  width: 140px;
+}
+
+select {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  height: 50px;
+  padding: 1em;
+  border: var(--border);
+  margin: 0.2em;
+}
+
+input::placeholder {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: rgb(187, 187, 187);
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+table input:focus,
+form input:focus,
+textarea:focus {
+  outline: 3px solid rgb(135, 180, 248);
+  border: none;
+}
+
+select:focus {
+  outline: none;
 }

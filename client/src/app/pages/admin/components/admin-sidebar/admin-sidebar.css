@@ -1,10 +1,23 @@
 .admin-sidebar {
   height: 100%;
   width: 15vw;
-  padding: 4em 2em;
   background-color: var(--bg-color);
   border-right: var(--border);
-
   display: flex;
   flex-direction: column;
+}
+
+.admin-sidebar a {
+  color: black;
+  border-bottom: var(--border);
+  background-color: rgba(0, 119, 255, 0);
+  text-align: center;
+  text-decoration: none;
+  padding: 2em 2em;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.admin-sidebar a:hover {
+  background-color: rgba(0, 119, 255, 0.178);
 }

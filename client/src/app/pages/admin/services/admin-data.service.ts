@@ -76,6 +76,20 @@ export class AdminDataService {
     });
   }
 
+  addComposer(composer: {
+    firstName: string;
+    lastName: string;
+    birthYear: number | null;
+    deathYear: number | null;
+    nationality: string;
+    eraId: number | null;
+  }) {
+    return this.composersService.addComposer(composer).subscribe((newComposer) => {
+      const current = this.composers$.getValue();
+      this.composers$.next([...current, newComposer]);
+    });
+  }
+
   private refreshPiecesWithDetails() {
     this.pieceSyllabiService.getDetails().subscribe((data) => this.piecesWithDetails$.next(data));
   }
