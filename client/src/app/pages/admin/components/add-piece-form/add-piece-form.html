@@ -1,19 +1,56 @@
-<h2>Add a new piece</h2>
-<form (ngSubmit)="addPiece()">
-  <label>
-    Piece Name:
-    <input type="text" [(ngModel)]="pieceName" name="pieceNameAdd" />
-  </label>
-
-  <label>
-    Composer:
-    <select [(ngModel)]="selectedComposerId" name="composerSelectAdd">
-      <option [ngValue]="null">-- Select Composer --</option>
-      <option *ngFor="let composer of composers" [ngValue]="composer.id">
-        {{ composer.firstName }} {{ composer.lastName }}
-      </option>
-    </select>
-  </label>
-
-  <button type="submit" [disabled]="!isFormValid">Add Piece</button>
+<h2>Add Single Piece</h2>
+<form (ngSubmit)="addSinglePiece()">
+  <input [(ngModel)]="pieceName" name="pieceName" placeholder="Piece Name" />
+  <select [(ngModel)]="selectedComposerId" name="composerSelect">
+    <option [ngValue]="null">Select Composer</option>
+    <option *ngFor="let c of composers" [ngValue]="c.id">
+      {{ getComposerName(c) }}
+    </option>
+  </select>
+  <button type="submit" [disabled]="!isSingleFormValid">Add Piece</button>
 </form>
+
+<hr />
+
+<h2>Add Multiple Pieces</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Piece Name</th>
+      <th>Composer</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of pieceRows; let i = index">
+      <td>
+        <input [(ngModel)]="row.name" name="multiName{{ i }}" placeholder="Piece Name" />
+      </td>
+      <td>
+        <select [(ngModel)]="row.composerId" name="multiComposer{{ i }}">
+          <option [ngValue]="null">Select Composer</option>
+          <option *ngFor="let c of composers" [ngValue]="c.id">
+            {{ getComposerName(c) }}
+          </option>
+        </select>
+      </td>
+      <td>
+        <button type="button" (click)="removeRow(i)" [disabled]="pieceRows.length === 1">
+          Remove
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<button type="button" (click)="addRow()">Add Row</button>
+<button type="button" (click)="submitMany()" [disabled]="!isMultiFormValid">Submit All</button>
+
+<h2>Paste JSON Pieces</h2>
+<textarea
+  [(ngModel)]="jsonInput"
+  name="jsonPieces"
+  rows="10"
+  placeholder='Paste JSON array here: [{"name": "Op.32 Prelude", "composerId": 5}, ...]'
+></textarea>
+<button type="button" (click)="submitJson()" [disabled]="!isJsonValid()">Submit JSON</button>

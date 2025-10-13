@@ -69,6 +69,13 @@ export class AdminDataService {
       .subscribe(() => this.refreshPiecesWithDetails());
   }
 
+  addPiece(pieceName: string, composerId: number) {
+    return this.piecesService.addPiece(pieceName, composerId).subscribe((newPiece) => {
+      const currentPieces = this.pieces$.getValue();
+      this.pieces$.next([...currentPieces, newPiece]);
+    });
+  }
+
   private refreshPiecesWithDetails() {
     this.pieceSyllabiService.getDetails().subscribe((data) => this.piecesWithDetails$.next(data));
   }
