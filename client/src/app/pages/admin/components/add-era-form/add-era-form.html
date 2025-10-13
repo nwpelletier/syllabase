@@ -1,0 +1,9 @@
+<h2>Add a new era</h2>
+<form (ngSubmit)="addEra()">
+  <label>
+    Era Name:
+    <input type="text" [(ngModel)]="eraName" name="eraNameAdd" />
+  </label>
+
+  <button type="submit" [disabled]="!isFormValid">Add Era</button>
+</form>

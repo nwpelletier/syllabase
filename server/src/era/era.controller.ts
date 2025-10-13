@@ -8,6 +8,7 @@ import {
 import { EraService } from "./era.service";
 import { Era } from "./era.entity";
 import { CreateEraDto } from "./dto/create-era.dto";
+import { CreateManyErasDto } from "./dto/create-many-eras.dto";
 
 @Controller("eras")
 export class EraController {
@@ -16,6 +17,13 @@ export class EraController {
   @Post()
   create(@Body() dto: CreateEraDto): Promise<Era> {
     return this.eraService.create(dto);
+  }
+
+  @Post("many")
+  createMany(
+    @Body() dto: CreateManyErasDto
+  ): Promise<Era[]> {
+    return this.eraService.createMany(dto.eras);
   }
 
   @Get()

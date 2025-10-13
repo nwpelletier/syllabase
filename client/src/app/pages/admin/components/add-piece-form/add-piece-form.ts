@@ -9,7 +9,7 @@ import { Composer } from '../../../../models/composer.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-piece-form.html',
-  styleUrls: ['./add-piece-form.css'],
+  styleUrls: ['../../admin.css'],
 })
 export class AddPieceForm {
   @Input() composers: Composer[] = [];

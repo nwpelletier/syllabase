@@ -13,4 +13,12 @@ export class ErasService {
   getAll(): Observable<Era[]> {
     return this.http.get<Era[]>(this.baseUrl);
   }
+
+  addEra(name: string): Observable<Era> {
+    return this.http.post<Era>(this.baseUrl, { name });
+  }
+
+  addManyEras(eras: { name: string }[]): Observable<Era[]> {
+    return this.http.post<Era[]>(`${this.baseUrl}/many`, { eras });
+  }
 }

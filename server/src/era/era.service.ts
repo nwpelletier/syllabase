@@ -49,4 +49,19 @@ export class EraService {
     console.log("[EraService] Created new era:", saved);
     return saved;
   }
+
+  async createMany(eras: CreateEraDto[]): Promise<Era[]> {
+    if (!eras?.length) {
+      console.log(
+        "[EraService] No eras provided, returning empty array"
+      );
+      return [];
+    }
+    const entities = eras.map((dto) =>
+      this.eraRepository.create(dto)
+    );
+    const saved = await this.eraRepository.save(entities);
+    console.log("[EraService] Saved eras:", saved);
+    return saved;
+  }
 }

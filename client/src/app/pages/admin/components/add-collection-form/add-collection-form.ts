@@ -10,7 +10,7 @@ import { CollectionsService } from '../../../../core/services/api/collections.se
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-collection-form.html',
-  styleUrls: ['./add-collection-form.css'],
+  styleUrls: ['../../admin.css'],
 })
 export class AddCollectionForm {
   @Input() collections: Collection[] = [];

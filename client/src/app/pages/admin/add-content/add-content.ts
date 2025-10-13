@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AddComposerForm } from '../components/add-composer-form/add-composer-form';
 import { AddPieceForm } from '../components/add-piece-form/add-piece-form';
 import { AddCollectionForm } from '../components/add-collection-form/add-collection-form';
+import { AddEraForm } from '../components/add-era-form/add-era-form';
 
 // Services
 import { AdminDataService } from '../services/admin-data.service';
@@ -17,13 +18,21 @@ import { Piece } from '../../../models/piece.model';
 import { Collection } from '../../../models/collection.model';
 import { Syllabus } from '../../../models/syllabus.model';
 import { Grade } from '../../../models/grade.model';
+import { Era } from '../../../models/era.model';
 
 @Component({
   selector: 'app-add-content',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddComposerForm, AddPieceForm, AddCollectionForm],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AddComposerForm,
+    AddPieceForm,
+    AddCollectionForm,
+    AddEraForm,
+  ],
   templateUrl: './add-content.html',
-  styleUrls: ['./add-content.css'],
+  styleUrls: ['../admin.css'],
 })
 export class AddContent implements OnInit {
   // ------------------- DATA -------------------
@@ -32,6 +41,7 @@ export class AddContent implements OnInit {
   collections: Collection[] = [];
   syllabi: Syllabus[] = [];
   grades: Grade[] = [];
+  eras: Era[] = [];
 
   // ------------------- SELECTION -------------------
   selectedComposerIdForPieceSyllabus: number | null = null;
@@ -52,6 +62,7 @@ export class AddContent implements OnInit {
 
   ngOnInit() {
     // Subscribe to shared data observables
+    this.adminData.eras$.subscribe((data: Era[]) => (this.eras = data));
     this.adminData.composers$.subscribe((data: Composer[]) => (this.composers = data));
     this.adminData.pieces$.subscribe((data: Piece[]) => (this.pieces = data));
     this.adminData.collections$.subscribe((data: Collection[]) => (this.collections = data));

@@ -9,7 +9,7 @@ import { ComposersService } from '../../../../core/services/api/composers.servic
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-composer-form.html',
-  styleUrls: ['./add-composer-form.css'],
+  styleUrls: ['../../admin.css'],
 })
 export class AddComposerForm {
   @Input() composers: Composer[] = [];
