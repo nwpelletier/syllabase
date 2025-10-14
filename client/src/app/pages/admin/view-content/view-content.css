@@ -1,3 +1,21 @@
 .admin-important-todo ul {
   color: red;
 }
+
+table {
+  border-collapse: collapse; /* collapses cell borders into one */
+  border: var(--border);
+}
+
+thead th {
+  border: var(--border);
+}
+
+tbody td {
+  text-align: center;
+  border: var(--border);
+}
+
+.piece-col {
+  width: 600px;
+}

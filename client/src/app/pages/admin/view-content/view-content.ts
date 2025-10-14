@@ -10,7 +10,7 @@ import { PieceWithDetails } from '../../../models/piece-with-details.model';
   imports: [CommonModule],
   providers: [AdminDataService], // <-- provide the service here
   templateUrl: './view-content.html',
-  styleUrls: ['./view-content.css'],
+  styleUrls: ['./view-content.css', '../admin.css'],
 })
 export class ViewContent implements OnInit {
   piecesWithDetails: PieceWithDetails[] = [];

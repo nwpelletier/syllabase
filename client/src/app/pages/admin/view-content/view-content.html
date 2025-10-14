@@ -1,36 +1,38 @@
-<div class="admin-important-todo">
-  <ul>
-    <h2>Important:</h2>
-    <li>AddContent needs:</li>
+<div class="admin-forms-container">
+  <div class="admin-important-todo">
     <ul>
-      <li>Add Syllabus (should be completely standalone, like eras)</li>
-      <li>Add Grades => Dropdown for Syllabus (same way piece/composer uses dropdown)</li>
+      <h2>Important:</h2>
+      <li>AddContent needs:</li>
+      <ul>
+        <li>Add Syllabus (should be completely standalone, like eras)</li>
+        <li>Add Grades => Dropdown for Syllabus (same way piece/composer uses dropdown)</li>
+      </ul>
+      <li>ViewContent needs:</li>
+      <ul>
+        <li>Larger table views so I can edit content</li>
+        <li>Easier way to fix typos, or update links</li>
+        <li>Multiple syllabi need to be added up so the content makes more sense to view</li>
+      </ul>
     </ul>
-    <li>ViewContent needs:</li>
-    <ul>
-      <li>Larger table views so I can edit content</li>
-      <li>Easier way to fix typos, or update links</li>
-      <li>Multiple syllabi need to be added up so the content makes more sense to view</li>
-    </ul>
-  </ul>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="piece-col">Piece</th>
+        <th>Composer</th>
+        <th>Collection</th>
+        <th>Syllabus</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of piecesWithDetails">
+        <td>{{ item.pieceName }}</td>
+        <td>{{ item.composer }}</td>
+        <td>{{ item.collection || '-' }}</td>
+        <td>{{ item.syllabus || '-' }}</td>
+        <td>{{ item.grade || '-' }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-<table>
-  <thead>
-    <tr>
-      <th>Piece</th>
-      <th>Composer</th>
-      <th>Collection</th>
-      <th>Syllabus</th>
-      <th>Grade</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of piecesWithDetails">
-      <td>{{ item.pieceName }}</td>
-      <td>{{ item.composer }}</td>
-      <td>{{ item.collection || '-' }}</td>
-      <td>{{ item.syllabus || '-' }}</td>
-      <td>{{ item.grade || '-' }}</td>
-    </tr>
-  </tbody>
-</table>
